@@ -96,6 +96,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/scss"  scoped>
+//@import "../assets/g-Patternlab/config/variables";
+ // @import "../assets/g-Patternlab/config/";
+//@import "../assets/g-Patternlab-config.json";
 h1, h2 {
   font-weight: normal;
 }
