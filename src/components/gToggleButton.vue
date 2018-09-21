@@ -1,17 +1,16 @@
 <template>
-
-	<div v-on:click="isActive = !isActive" ref="gToggleButton"  v-bind:class="{ active: isActive, 'disabled': isDisabled }" class="g-Button">
+	<div v-on:click="isActive = !isActive" ref="gToggleButton"
+	     v-bind:class="{ active: isActive, 'disabled': isDisabled }" class="g-Button">
 		<slot>
 			<div class="inner">
 
-				<a v-if="Data.link" class="g-Button__link" v-bind:href="Data.link" >{{activeMessage}} gillian{{Data.myMessage}}</a>
+				<a v-if="Data.link" class="g-Button__link" v-bind:href="Data.link">{{activeMessage}}
+					gillian{{Data.myMessage}}</a>
 				<button v-else>{{disabledMessage}}: {{activeMessage}}:{{Data.label}}</button>
 			</div>
 		</slot>
 	</div>
-
 </template>
-
 <script type="text/javascript">
 	import Vue from 'vue';
 
@@ -31,128 +30,98 @@
 				type: Boolean,
 				default: false
 			},
-			guid:{
+			guid: {
 				type: String
 			},
-			dataObj:{}
+			dataObj: {}
 		},
-			data: function() {
-				return {
-					_message: "NEW DEFAULT MESSAGE",
-					_active:false,
-					_disabled:false,
-					_data: {myMessage:"Default DataMessage Message"}
-				}
-			},
-			computed: {
-				activeMessage: function () {
-					if (this.$data._active){
-						return 'CUrrently active component';
-					}else{
-						return 'not active';
-					}
-				},
-				disabledMessage: function () {
-					// `this` points to the vm instance
-					if (this.$data._disabled){
-						return 'CUrrently disabled component';
-					}else{
-						return 'not disabled';
-					}
-				},
-			isActive: {
-					// getter
-					get: function () {
-						return this.$data._active;
-					},
-					// setter
-					set: function (newValue) {
-						if (!this.$data._disabled ){
-							this.$data._active = newValue;
-
-						}
-					}
-				},
-				isDisabled: {
-					// getter
-					get: function () {
-						return this.$data._disabled;
-					},
-					// setter
-					set: function (newValue) {
-						//console.log('setting ' + newValue);
-						this.$data._disabled = newValue;
-					}
-				},
-			Message: {
-					// getter
-					get: function () {
-						return this.$data._message +  this.$data._data.myMessage;
-					},
-					// setter
-					set: function (newValue) {
-						this.$data._message = newValue;
-					}
-				},
-
-		Data: {
-			// getter
-			get: function () {
-				return this.$data._data ;
-			},
-			// setter
-			set: function (newValue) {
-
-				if ( (typeof newValue == 'string') && (typeof JSON.parse( newValue ) == 'object')){
-					this.Data = JSON.parse(this.dataObj);
-					this.$data._data= JSON.parse( newValue );
-
-				}else{
-					this.$data._data= newValue;
-				}
+		data: function() {
+			return {
+				_active: false,
+				_disabled: false,
+				_data: {}
 			}
-		}
+		},
+		computed: {
+			activeMessage: function() {
+				if (this.$data._active){
+					return 'active';
+				} else {
+					return 'notactive';
+				}
+			},
+			disabledMessage: function() {
+				// `this` points to the vm instance
+				if (this.$data._disabled){
+					return 'disabled';
+				} else {
+					return 'enabled';
+				}
+			},
+			Guid: function() {
+				return this.Data.guid;
 			}
 			,
-			created: function () {
-
-
-				this.Data = this.dataObj;
-
-				this.Message =	this.message ;
-			this.isActive = this.active;
-				this.isDisabled = this.disabled;
-
-				//if (this.dataObj){
-				//	this.Data = this.dataObj;
-				//}
-
+			isActive: {
+				// getter
+				get: function() {
+					return this.$data._active;
+				},
+				// setter
+				set: function(newValue) {
+					if (!this.$data._disabled){
+						this.$data._active = newValue;
+					}
+				}
 			},
-			updated: function () {
-
-console.log("---------------------_____CHANGED");
-console.log(this.isActive);
-				this.Data.active = this.isActive;
-				console.log( this.guid);
-				this.emitEvent("changed",this.Data);
-
-
-
+			isDisabled: {
+				// getter
+				get: function() {
+					return this.$data._disabled;
+				},
+				// setter
+				set: function(newValue) {
+					this.$data._disabled = newValue;
+				}
 			},
-			methods:{
-				emitEvent( event ) {
-					this.$emit(event, this, this.Data);
+			Data: {
+				// getter
+				get: function() {
+					return this.$data._data;
+				},
+				// setter
+				set: function(newValue) {
+
+					if ((typeof newValue == 'string') && (typeof JSON.parse(newValue) == 'object')){
+						this.Data = JSON.parse(this.dataObj);
+						this.$data._data = JSON.parse(newValue);
+
+					} else {
+						this.$data._data = newValue;
+					}
 				}
 			}
+		},
+		created: function() {
+			this.Data = this.dataObj;
+			this.Message = this.message;
+			this.isActive = this.active;
+			this.isDisabled = this.disabled;
+		},
+		updated: function() {
+			this.Data.active = this.isActive;
+			console.log(this.Guid);
+			this.$emit("changed", this, this.Data);
 		}
+	}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" type="text/scss"  scoped>
+<style lang="scss" type="text/scss" scoped>
 
-	.g-Button{
+	.g-Button {
 		background: yellow;
-		&.active{
+		&.active {
 			background: green;
 		}
 	}
