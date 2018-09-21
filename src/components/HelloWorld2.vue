@@ -1,16 +1,15 @@
 <template>
 
   <div class="hello">
-    <button v-on:click="greet">Greet</button>
-    <li v-for="item in items">
-      {{ item.label }}
-    </li>
+    Product Single Option Selector
 
-    <gToggleButton v-for="item in items" v-bind:data="item" v-bind:key="item.label"  v-bind:active="item.active" v-bind:label="item.label"  v-on:updated="greet" v-on:my-event="greet" v-on:change="greet"  link="http://google.com" >
+    <div>{{OptionName}}</div>
+    <gButtonGroup v-on:changed="doaction" v-bind:buttons="values" class="properButtonGroup" :maxSelected="3">
+
+    </gButtonGroup>
 
 
-    </gToggleButton>
-    <vue-numeric-input  :min="1" :max="10" :step="2"></vue-numeric-input>
+    <vue-numeric-input   v-model="value" :min="1" :max="1000" :step="2"></vue-numeric-input>
 
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
@@ -101,61 +100,187 @@
 <script type="text/javascript">
 
 	import Vue from 'vue';
-	import gToggleButton from '@/components/gToggleButton.vue';
 	import VueNumericInput from 'vue-numeric-input'
-
+    import gButtonGroup from '@/components/gButtonGroup.vue';
 
 	export default {
   name: 'HelloWorld2',
 		components: {
-			gToggleButton,
+			gButtonGroup,
 			VueNumericInput
 		},
 		updated: function (evt) {
-			console.log("calling updating " + evt )
 
 		},
+		mounted: function () {
+
+			//this.$data.items.forEach( item => console.log(Object.assign({testing: "hihi", id: this.getRandomInt() }, item) ));
 
 
+			this.$nextTick(function () {
+				// Code that will run only after the
+				// entire view has been rendered
+			})
+		},
+		created: function (evt) {
+
+this.$nextTick(function(){  	this.updateSelectedStatus();
+	//console.log("SETTING NEW SELECTED VALUE");
+  //  var ref = {};
+
+
+
+	/*for (var i = 0; i < this.$children.length; i++) {
+		console.log(this.$children[i].Name);
+		if ( this.$children[i].Name )
+	}
+*/
+
+})
+		},
+		computed: {
+			OptionName:function (){
+				return this.$data._optionName;
+            },
+			OptionRef:function (){
+				return `option${this.$data.position}`;
+			},
+			MyCount: {
+
+				get: function () {
+					return this.$data.value ;
+				},
+				// setter
+				set: function (newValue) {
+
+
+				//	this.$data.selected= newValue;
+
+					this.$data.value = newValue
+
+				}
+
+
+			},
+			Selected: {
+
+				get: function () {
+					return this.$data.selected ;
+				},
+				// setter
+				set: function (newValue) {
+
+
+						this.$data.selected= newValue;
+
+				}
+
+
+			},
+			SelectedMessage: function () {
+				console.log(this.selected);
+			    if (this.$data.selected ){
+			    	return `THERE ARE ITEMS ${this.Selected.length} SELECTED`
+                }else{
+			    	return "none selected";
+                }
+			}
+  },
 	methods: {
-		greet: function (event) {
+		getRandomInt: function(min = 0, max = 999999999999) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		},
+		doaction: function (event, data) {
 			// `this` inside methods points to the Vue instance
 
-console.log(this.$children);			// `event` is the native DOM event
+			console.log('!!ewewe');
+			console.log(event)// `event` is the native DOM event
 
-            for ( var i = 0; i<this.$children.length; i++){
-            	console.log(this.$children[i]);
-            }
-			if (event) {
-				alert(event.target.tagName)
+            this.MyCount = event.SelectedCount;
+			//console.log(this.Selected);
+			//this.updateSelectedStatus();
+
+
+		},
+		updateSelectedStatus: function (){
+			console.log("updating status");
+			var newArr = [];
+
+			for ( var i = 0; i<this.$children.length; i++){
+				console.log(this.$children[i].isActive);
+				if ( this.$children[i].isActive ){
+					newArr.push(this.$children[i].Data);
+				}
 			}
+			if ( newArr.length == 0){
+				this.Selected  = false;
+
+			}else{
+				this.Selected  = newArr;
+            }
+
+		},
+		greet: function (event) {
+
+
 		}
 	}
 	,
   data () {
     return {
+    	value:99,
+    	displayNumber:555,
+    	selected:false,
       msg: 'GILLIAN PAGE',
+
+	    id: 2643071074422,
+	    product_id: 1919179161718,
+	    _optionName: "Color",
+	    position: 1,
+	    values: [
+		    "Alumroot",
+		    "Ash",
+		    "Basswood",
+		    "Bee-Balm",
+		    "Bluebell",
+		    "Cresheim Creek",
+		    "Cedar Berry",
+		    "Fringetree",
+		    "Ganoga Falls",
+		    "Gingko Nut",
+		    "Gray Birch",
+		    "Juneberry",
+		    "Pachysandra",
+		    "Porcupine",
+		    "Purple Loosestrife",
+		    "Red Squirrel",
+		    "River Oat",
+		    "Scarlet Oak",
+		    "Steelhead",
+		    "Wild Geranium",
+		    "Wissahickon",
+		    "Wood Dove",
+		    "Wood Fern"
+	    ],
 	    items: [{
 		    label: 'Todo A',
-		    link: 'Project A',
+		    message: 'Project A',
 		    done: false,
-		    active:true
+		    active:false
 	    }, {
 		    label: 'Todo B',
-		    link: 'Project B',
+		    message: 'Project B',
 		    done: true,
-            active:true
-
-
+            active:false
 	    }, {
 		    label: 'Todo C',
-		    project: 'Project C',
+		    message: 'Project C',
 		    done: false,
 
 		    active:true
 	    }, {
 		    label: 'Todo D',
-		    project: 'Project D',
+		    message: 'Project D',
 		    done: false,
 	    }],
     }
