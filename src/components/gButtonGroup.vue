@@ -4,7 +4,6 @@
 		               v-on:changed="updateSelected"
 		               v-bind:guid="item.id" v-bind:active="item.active" v-bind:disabled="item.disabled"
 		               v-bind:dataObj="item.dataObj" message="GILLIAN CHILD COMPONENT"></gToggleButton>
-		<vue-numeric-input :min="1" :max="1000" :step="2"></vue-numeric-input>
 
 	</div>
 </template>
@@ -16,13 +15,11 @@
 
 	import Vue from 'vue';
 	import gToggleButton from '@/components/gToggleButton.vue';
-	import VueNumericInput from 'vue-numeric-input'
 
 	export default {
 		name: 'gButtonGroup',
 		components: {
-			gToggleButton,
-			VueNumericInput
+			gToggleButton
 		}, props: {
 			maxSelected: Number,
 			items: Array
