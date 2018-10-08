@@ -5,7 +5,7 @@
 
     <div>{{ProductOptionName}}</div>
     <div v-if="SelectedOptionCount">Selected Count {{SelectedOptionCount }}</div>
-    <gButtonGroup ref="productOptionSelector" v-on:changed="productOptionChanged" v-bind:items="Options" class="properButtonGroup" :maxSelected="6">
+    <gButtonGroup v-bind:mutuallyExclusive="false" ref="productOptionSelector" v-on:changed="productOptionChanged" v-bind:items="Options" class="properButtonGroup" :maxSelected="6">
 
     </gButtonGroup>
 
@@ -91,11 +91,27 @@
 			}
   },
 	methods: {
-		productOptionChanged: function (data) {
+		setSelectedOption: function (index,active) {
 			// `this` inside methods points to the Vue instance
-			console.log('******SINGLE OPTION CHANGE'+data)
-            this.SelectedOptions = data;
-			this.$emit("optionchanged", this, data);
+
+
+Vue.set(this.$data._options[index], "active",true)
+            console.log(  this.$data._options);
+
+
+			//this.SelectedOptions = new Array();
+			//this.SelectedOptions.push(this.Options[index].Data);
+			//this.$forceUpdate();
+			//console.log(this.SelectedOptions)
+
+			//this.SelectedOptions = data;
+			//this.$emit("optionchanged", this, data);
+		},
+		productOptionChanged: function (selected) {
+			// `this` inside methods points to the Vue instance
+			console.log('******SINGLE OPTION CHANGE'+ selected)
+            this.SelectedOptions = selected;
+			this.$emit("optionchanged", this, selected);
 		}
 	},
   data () {

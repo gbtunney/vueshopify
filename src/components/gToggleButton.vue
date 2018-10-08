@@ -100,6 +100,23 @@
 						this.$data._data = newValue;
 					}
 				}
+			},
+			MyData: {
+				// getter
+				get: function() {
+					return this.$data._data;
+				},
+				// setter
+				set: function(newValue) {
+
+					if ((typeof newValue == 'string') && (typeof JSON.parse(newValue) == 'object')){
+						this.Data = JSON.parse(this.dataObj);
+						this.$data._data = JSON.parse(newValue);
+
+					} else {
+						this.$data._data = newValue;
+					}
+				}
 			}
 		},
 		created: function() {
@@ -111,7 +128,14 @@
 		updated: function() {
 			this.Data.active = this.isActive;
 			console.log(this.Guid);
-			this.$emit("changed", this, this.Data);
+
+			var newData = new Object();
+			newData = {
+				active: this.isActive,
+				disabled: this.isDisabled,
+				dataObj: this.Data
+			}
+			this.$emit("changed", newData);
 		}
 	}
 </script>

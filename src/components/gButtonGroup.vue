@@ -1,6 +1,8 @@
 <template>
+
 	<div class="gButtonGroup" v-bind:maxSelected="MaxSelected">
-		<gToggleButton ref="gToggleButton" v-for="item in Items" v-bind:key="getRandomInt()"
+		<button v-on:click="updateByIndex(2)">gillian me</button>
+		<gToggleButton ref="gToggleButton" v-for="item in Buttons" v-bind:key="getRandomInt()"
 		               v-on:changed="updateSelected"
 		               v-bind:guid="item.id" v-bind:active="item.active" v-bind:disabled="item.disabled"
 		               v-bind:dataObj="item.dataObj" message="GILLIAN CHILD COMPONENT"></gToggleButton>
@@ -22,33 +24,38 @@
 			gToggleButton
 		}, props: {
 			maxSelected: Number,
-			items: Array
+			items: Array,
+			mutuallyExclusive:Boolean
 		},
 		updated: function(evt) {
 
 		},
 		created: function(evt) {
 			this.MaxSelected = this.maxSelected;
-			this.Items = this.items;
-			this.$nextTick(function() {
-				//this.updateSelectedStatus();
+			this.Buttons = this.items;
 
-			})
+			this.$on('maxSelectionReached', () => {
+				console.log('maxSelectionReached event listened'); // It'a never fired
+
+				for (var i =0; i<this.Buttons.length;i++){
+					Vue.set(this.Buttons[i], "disabled", !this.Buttons[i].active);
+
+				} ;
+			});
 		},
 		computed: {
 			SelectedCount: function() {
-				return this.Items.filter(item => item.active).length;
-				//	return this.$data.selected.length;
+				return this.Selected.length;
 			},
 			isMaxSelected: function() {
-				if (this.$data.selected.length >= this.$data._maxSelected){
+
+				if (this.SelectedCount >= this.$data._maxSelected){
 					return true;
 				} else {
 					return false;
 				}
 			},
 			MaxSelected: {
-
 				get: function() {
 					return this.$data._maxSelected;
 				},
@@ -63,18 +70,17 @@
 				},
 				// setter
 				set: function(newValue) {
-					this.$data._maxSelected = _buttons;
+					this.$data._buttons = newValue;
 				}
 			},
-			Selected: {
-				get: function() {
-					return this.$data.selected;
-				},
-				// setter
-				set: function(newValue) {
-					this.$data.selected = newValue;
-				}
+			Selected: function(){
+				return this.$data._buttons.filter(item => item.active);
 			}
+		,
+		SelectedCount: function(){
+			return this.$data._buttons.filter(item => item.active).length;
+		}
+
 		},
 		methods: {
 			getRandomInt: function(min = 0, max = 999999999999) {
@@ -82,31 +88,78 @@
 			},
 			getItemByGuid: function(guid) {
 
-				return this.Items.filter(item => item.guid == guid);
+				return this.Buttons.filter(item => item.guid == guid);
 			},
-			updateSelected: function(vo, vm, data2) {
-				this.Selected = this.$refs.gToggleButton.filter(item => item.isActive);
-				this.$emit("changed", this.Selected.map(item => item.Data), "hello");
+			getIndex: function(guid){
 
-				for (var i = 0; i < this.$refs.gToggleButton.length; i++) {
+			return this.Buttons.findIndex(button => button.guid == guid);
+	},
+			updateByIndex(index){
+				if ( this.$data._buttons[index] ){
+					Vue.set(this.$data._buttons[index], "disabled", true);
+					console.log(this.Selected );
+				}
+			},
+			updateSelected: function( newData ) {
 
-					var button = this.$refs.gToggleButton[i];
-					if (this.isMaxSelected){
-						if (!button.isActive){
-							button.isDisabled = true;
+				if (newData.active != this.getItemByGuid(newData.dataObj.guid).active ){
 
-						} else {
-							button.isDisabled = false;
+					console.log("SELECTED COUNT " + this.SelectedCount)
+					var index = this.getIndex( newData.dataObj.guid );
+					Vue.set(this.$data._buttons[index], "active", true);
+					if (!this.mutuallyExclusive){
+						if ( this.isMaxSelected ){
+							/*
+													for ( var i =0; i< this.Buttons.length; i++) {
+														var button = this.Buttons[i];
+														console.log(button);
 
-						}
-					} else {
-						if (!button.isActive){
-							button.isDisabled = false;
+														if (this.isMaxSelected){
+															if (!button.active){
+																//button.disabled = true;
+																Vue.set(button, "disabled", true);
 
-						} else {
-							button.isDisabled = false;
+															} else {
+																//..button.disabled = false;
+																console.log('SETTING MAX ACTIVE AGAIN');
+																Vue.set(button, "disabled", false);
+
+															}
+														} else {
+
+
+															if (!button.active){
+																//button.disabled = false;
+																Vue.set(button, "disabled", false);
+
+
+															} else {
+																//button.disabled = false;
+																Vue.set(button, "disabled", false);
+
+															}
+														}
+
+														this.$data._buttons[i] = button;
+
+													} //}
+							*/
+
+							this.$emit("maxSelectionReached", this.Selected);
+
+						}else{
+							//if ( this.$data._buttons[index] ){
+							for (var i =0; i<this.Buttons.length;i++){
+								Vue.set(this.Buttons[i], "disabled", false);
+
+							}
+						//	console.log ('turning off');
+						//		Vue.set(button, "disabled", true);
+
 						}
 					}
+
+					this.$emit("changed", this.Selected);
 				}
 			}
 		},

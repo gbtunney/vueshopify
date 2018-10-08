@@ -1,11 +1,15 @@
 <template>
 
   <div class="product option selector">
-   <h2>Product </h2>
+
+      <gMutuallyExclusiveButtonGroup v-bind:items="Buttons">
+
+      </gMutuallyExclusiveButtonGroup>
+   <h2 v-on:click="testMethod()">Product </h2>
 {{CurrentProduct.title}}
       <h2>Quantity</h2>
           <vue-numeric-input v-model="Quantity" :min="1" :max="1000" :step="2"></vue-numeric-input>
-      <h2>Current Variant</h2>
+      <h2 >Current Variant</h2>
       {{CurrentVariant.id}} : {{CurrentVariant.title}}  {{CurrentVariant.price}}
 
       <h2>Variants</h2>
@@ -14,12 +18,12 @@
       </h5>
 
      <hr>{{CurrentOptionsSelected}}
-<ProductOptionSelector ref="singleOptionSelector" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="1" v-bind:options="Options1"></ProductOptionSelector>
+<ProductOptionSelector ref="singleOptionSelector1" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="1" v-bind:options="Options1"></ProductOptionSelector>
+      <button v-on:click="testClick">test me</button>
 
-	  <ProductOptionSelector ref="singleOptionSelector" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="2" v-bind:options="Options2"></ProductOptionSelector>
+      <ProductOptionSelector ref="singleOptionSelector2" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="2" v-bind:options="Options2"></ProductOptionSelector>
 
       options
-
 
   </div>
 
@@ -31,13 +35,46 @@
 	import VueNumericInput from 'vue-numeric-input'
 	import CONFIG from '@/components/config.json'
 	import ProductOptionSelector from '@/components/ProductOptionSelector'
+    import gMutuallyExclusiveButtonGroup from '@/components/gMutuallyExclusiveButtonGroup'
+
 	import store from '../store'
 
 	export default {
   name: 'Product',
 		components: {
 			VueNumericInput,
-			ProductOptionSelector
+			ProductOptionSelector,
+			gMutuallyExclusiveButtonGroup
+		},
+		data () {
+			return {
+				_buttons: [{
+					dataObj: {
+						label: 'Todo A'
+					},
+					active: true,
+					disabled: false
+				}, {
+					dataObj: {
+						label: 'Todo B'
+					},
+					active: true,
+					disabled: false
+				}, {
+					dataObj: {
+						label: 'Todo C'
+					},
+					active: true,
+					disabled: false
+				}, {
+					dataObj: {
+						label: 'Todo D'
+					},
+					active: true,
+					disabled: false
+				}
+				]
+			}
 		},
 		created: function (evt) {
 
@@ -46,26 +83,17 @@
 
 			store.commit('SHOPIFY_DATA_INIT',CONFIG.products);
 
-
-		//	store.commit('SINGLE_OPTION_SELECTED',1,this.CurrentProduct );
-
             let mystore = store;
 
-			store.dispatch('SHOPIFY_DATA_COMPLETE').then(() => {
-				// ...
-
-				console.log('product: data completed');
-				//console.log(this.CurrentProduct);
-
-				//store.commit('SINGLE_OPTION_SELECTED');
-
-				this.singleOptionSelected();
-
-
-			})
+		//	store.dispatch('SHOPIFY_DATA_COMPLETE').then(() => {
+			//	this.singleOptionSelected(1,'Wild Geranium');
+			//})
 
 		},
 		computed: {
+			Buttons:  function() {
+				return this.$data._buttons;
+			},
 			DATASTORE:  function() {
 				return store.getters;
 			},
@@ -105,29 +133,56 @@
 
   	singleOptionSelected:function(index,value){
 			store.commit('SINGLE_OPTION_SELECTED', {
-				index: 1,
-				value: 'Wild Geranium'
+				index: index,
+				value: value
 			});
+        },
+		testMethod:function(){
+
+  		console.log("test clicked");
+
+  		Vue.set(this.$data._buttons[1], "active", false);
+
         },
   	variantClicked:function(variant){
 	    store.dispatch('incrementAsync', {
 		    amount: 10
 	    });
 	    this.CurrentVariant = variant;
-    },
+    },testClick: function (){
+
+
+  		var optionMeta = this.$refs[`singleOptionSelector1`];
+			console.log(optionMeta);
+
+			optionMeta.setSelectedOption(4,true);
+          //  optionsMeta.forceUpdate();
+
+		},
 		singleProductOptionChanged:function(optionMeta,selectedoptions){
 
-			console.log('HIHIH');
+			console.log('!!!!!!!!!!!!!!HIHIH' + optionMeta.optionID);
 
   		console.log(selectedoptions);
 
-  		console.log(this.$refs);
 
 
- 
+  		if (selectedoptions.length == 1 ){
+		    store.commit('SINGLE_OPTION_SELECTED', {
+			    index: optionMeta.optionID,
+			    value: selectedoptions[0]
+		    });
 
 
-		var variantsWithCriteria=	this.Variants.filter(function (variant) {
+
+		         //console.log(optionMeta.Options['4']);
+		   // console.log(this.$refs);
+
+		   // optionMeta.productOptionChanged()
+        }
+
+
+/*		var variantsWithCriteria=	this.Variants.filter(function (variant) {
 				for (var i=0;i<selectedoptions.length;i++){
 					console.log(variant[optionMeta.ProductOptionKey]);
 					if ( variant[optionMeta.ProductOptionKey]== selectedoptions[i].label ){
@@ -137,24 +192,16 @@
                 }
                 return false;
 				//return replaceKey(variant,"sku","testsku");
-			});
+			});*/
 
-		if (variantsWithCriteria.length==1){
+		/*if (variantsWithCriteria.length==1){
 this.CurrentVariant = variantsWithCriteria[0];
 		}else{
 			console.log('none selected');
-
-		}
-//console.log(this.Variants.filter(variant => ( variant.option1 == option.label ) ) );
-
-//			/this.Variants.filter(variant => ( variant.option1 == option.label ) ) ;
+		}*/
 
         },
 	},
-  data () {
-    return {
-    }
-  }
 }
 </script>
 
