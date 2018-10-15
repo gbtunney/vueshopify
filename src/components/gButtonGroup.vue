@@ -1,8 +1,7 @@
 <template>
 
 	<div class="gButtonGroup" v-bind:maxSelected="MaxSelected">
-		<button v-on:click="updateByIndex(2)">gillian me</button>
-		<gToggleButton ref="gToggleButton" v-for="item in Buttons" v-bind:key="getRandomInt()"
+		<gToggleButton ref="gToggleButton" v-for="item,key in Buttons" v-bind:key="key"
 		               v-on:changed="updateSelected"
 		               v-bind:guid="item.id" v-bind:active="item.active" v-bind:disabled="item.disabled"
 		               v-bind:dataObj="item.dataObj" message="GILLIAN CHILD COMPONENT"></gToggleButton>
@@ -100,16 +99,38 @@
 					console.log(this.Selected );
 				}
 			},
-			updateSelected: function( newData ) {
+			updateSelected: function( newData, key ) {
 
-				if (newData.active != this.getItemByGuid(newData.dataObj.guid).active ){
 
-					console.log("SELECTED COUNT " + this.SelectedCount)
-					var index = this.getIndex( newData.dataObj.guid );
-					Vue.set(this.$data._buttons[index], "active", true);
-					if (!this.mutuallyExclusive){
+console.log(key);
+
+console.log(this.$data._buttons);
+
+var oldArray = this.Buttons.slice(0);
+
+oldArray[key] =newData;
+this.Buttons = oldArray;
+
+
+
+				//this.$data._buttons.$set(0, newData);
+
+			//	Vue.set(this.$data._buttons, key, newData);
+
+			//	Vue.set(this.Buttons[2], "disabled", true);
+
+
+				//	this.$emit("changed", this.Selected);
+
+
+				//if (newData.active != this.getItemByGuid(newData.dataObj.guid).active ){
+
+					//console.log("SELECTED COUNT " + this.SelectedCount)
+				//	var index = this.getIndex( newData.dataObj.guid );
+					//Vue.set(this.$data._buttons[index], "active", true);
+					/*if (!this.mutuallyExclusive){
 						if ( this.isMaxSelected ){
-							/*
+
 													for ( var i =0; i< this.Buttons.length; i++) {
 														var button = this.Buttons[i];
 														console.log(button);
@@ -142,8 +163,8 @@
 
 														this.$data._buttons[i] = button;
 
-													} //}
-							*/
+													}
+
 
 							this.$emit("maxSelectionReached", this.Selected);
 
@@ -151,16 +172,12 @@
 							//if ( this.$data._buttons[index] ){
 							for (var i =0; i<this.Buttons.length;i++){
 								Vue.set(this.Buttons[i], "disabled", false);
-
 							}
-						//	console.log ('turning off');
-						//		Vue.set(button, "disabled", true);
 
 						}
-					}
+					}*/
 
-					this.$emit("changed", this.Selected);
-				}
+				//}
 			}
 		},
 		data() {

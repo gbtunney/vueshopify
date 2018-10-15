@@ -62,36 +62,12 @@ export default new Vuex.Store({
 		increment2 (state) {
 			state.count++
 		},
+		["UPDATE_SELECTED_VARIANT"](state,payload){
+		
+		},
 		[SINGLE_OPTION_SELECTED](state, payload) {
-			
-			//console.log();
-			
-			if ( state._currentOptionsSelected.hasOwnProperty(`option${payload.index}`)){
-				
-				if ( state._currentOptionsSelected[`option${payload.index}`] != payload.value ){
-					
-					Vue.set(state._currentOptionsSelected, `option${payload.index}`, payload.value);
-					console.log(`single option changed!! option${payload.index} ${payload.value}`);
-					
-					this.dispatch('SINGLE_OPTION_CHANGED', {
-						index: 1,
-						value: 'Wild Geranium'
-					});
-					
-				}
-				
-			}else{
-				console.log(`NO excisting current option set, change requested:  option${payload.index} ${payload.value}`);
-				Vue.set(state._currentOptionsSelected, `option${payload.index}`, payload.value);
-				
-				this.dispatch('SINGLE_OPTION_CHANGED', {
-					index: 1,
-					value: 'Wild Geranium'
-				});
-			}
-			
-			
-			
+			console.log('option selected');
+		
 		},
 		[SINGLE_OPTION_CHANGED](state, index, optionValue ) {
 			

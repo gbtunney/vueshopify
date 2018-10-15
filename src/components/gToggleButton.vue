@@ -127,7 +127,7 @@
 		},
 		updated: function() {
 			this.Data.active = this.isActive;
-			console.log(this.Guid);
+			console.log(this);
 
 			var newData = new Object();
 			newData = {
@@ -135,7 +135,9 @@
 				disabled: this.isDisabled,
 				dataObj: this.Data
 			}
-			this.$emit("changed", newData);
+
+			var key = this.$vnode.key;
+			this.$emit("changed", newData, key);
 		}
 	}
 </script>
