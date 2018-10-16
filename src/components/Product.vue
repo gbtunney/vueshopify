@@ -18,7 +18,7 @@
       </h5>
 
      <hr>{{CurrentOptionsSelected}}
-<ProductOptionSelector ref="singleOptionSelector1" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="1" v-bind:options="Options1"></ProductOptionSelector>
+<ProductOptionSelector defaultVariantIndex="4" ref="singleOptionSelector1" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="1" v-bind:options="Options1"></ProductOptionSelector>
       <button v-on:click="testClick">test me</button>
 
       <ProductOptionSelector ref="singleOptionSelector2" v-on:optionchanged="singleProductOptionChanged" v-bind:optionID="2" v-bind:options="Options2"></ProductOptionSelector>
@@ -78,10 +78,10 @@
 		},
 		created: function (evt) {
 
-			store.dispatch('GET_SHOPIFY_DATA');
+			//store.dispatch('GET_SHOPIFY_DATA');
 
 
-			store.commit('SHOPIFY_DATA_INIT',CONFIG.products);
+		//	store.commit('SHOPIFY_DATA_INIT',CONFIG.products);
 
             let mystore = store;
 

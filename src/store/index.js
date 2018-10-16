@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 export const SHOPIFY_DATA_INIT = 'SHOPIFY_DATA_INIT';
+
 export const SHOPIFY_DATA_READY = 'SHOPIFY_DATA_READY';
+
+
 export const CURRENT_VARIANT_CHANGED = 'CURRENT_VARIANT_CHANGED';
 export const GET_SHOPIFY_DATA = 'GET_SHOPIFY_DATA';
 export const SINGLE_OPTION_CHANGED = 'SINGLE_OPTION_CHANGED';
@@ -30,8 +33,6 @@ export default new Vuex.Store({
 		_variants: false,
 		_currentVariant: false,
 		_options: false,
-		_currentOptionsSelected : new Object(),
-		_optionCount: 3,
 		count:0,
 	},
 	getters: {
@@ -51,6 +52,10 @@ export default new Vuex.Store({
 			
 			return state._options;
 		},
+		CurrentVariantImage: state => {
+			
+			return state._currentVariant;
+		},
 		CurrentOptionsSelected: state => {
 			return state._currentOptionsSelected;
 		}
@@ -62,55 +67,80 @@ export default new Vuex.Store({
 		increment2 (state) {
 			state.count++
 		},
-		["UPDATE_SELECTED_VARIANT"](state,payload){
-		
+		["PRODUCT_IMAGE_REQUESTED"](state){
+			console.log("________________________________________-",this.state._currentVariant.image_id);
+			let  requestedImageID =  this.state._currentVariant.image_id;
+			
+			
+			var newImage = this.state._currentProduct.images.find(function (image){
+				if ( requestedImageID == image.id ){return true;}} );
+			
+			
+			console.log(newImage);
+			
+			
+			
+			this.commit('PRODUCT_IMAGE_CHANGED',{
+				image: newImage
+			});
+			
+			
 		},
-		[SINGLE_OPTION_SELECTED](state, payload) {
-			console.log('option selected');
+	["PRODUCT_IMAGE_CHANGED"](state,payload){
+	
+	},
 		
+		
+		
+		[SINGLE_OPTION_SELECTED](state, payload) {
+		//	console.log('option selected');
 		},
 		[SINGLE_OPTION_CHANGED](state, index, optionValue ) {
-			
-			console.log('option changed');
-			//state._currentOptionsSelected.set(`option${index}`, optionValue);
-			
-			//this.state._currentVariant = variant;
 		},
-		[CURRENT_VARIANT_CHANGED](state, variant) {
-			this.state._currentVariant = variant;
+		[CURRENT_VARIANT_CHANGED](state, payload) {
+			console.log(payload);
+			
+			this.state._currentVariant = payload;
+			
+			//if (this.state._currentVariant){
+				//throw "FOUND"
+				console.log("NEWWW VARIANT UPDATED IN STORE", this.state._currentVariant);
+				
+				this.commit('PRODUCT_IMAGE_REQUESTED');
+			//}
+			
+		
+			
+			
 		},
-		[GET_SHOPIFY_DATA](state){
+		[SHOPIFY_DATA_READY](state,products){
 		
 		},
-		[SHOPIFY_DATA_INIT](state, products) {
+		["SHOPIFY_DATA_INIT"](state, products) {
 			this.state._products = products;
 			
+			//console.log("initializing data",state);
 			if (!this.state._currentProduct){
 				this.state._currentProduct = this.state._products[0];
+				
 			}
 			if (state._currentProduct){
 				if (state._currentProduct.hasOwnProperty('variants')){
 					this.state._variants = state._currentProduct['variants'];
-					
-					if (!this.state._currentVariant){
-						this.state._currentVariant = this.state._variants[0]; //first available
-						console.log('trying to xall');
-						console.log(this.state._currentVariant);
-					}
 				}
 				if (this.state._currentProduct.hasOwnProperty('options')){
-					console.log('hihi');
 					this.state._options = this.state._currentProduct['options'];
-					
 				}
+				this.commit('SHOPIFY_DATA_READY',this.state._products);
 				
 			}
 			
-			//commit('SHOPIFY_DATA_COMPLETE');
+			
 			
 		},
+		
 		[SHOPIFY_DATA_COMPLETE](state){
-			console.log('data completed mutation');
+		//	console.log('data completed mutation');
 		}
 	},
 	actions: {
@@ -122,23 +152,10 @@ export default new Vuex.Store({
 				commit('increment2')
 			}, 10000)
 		},
-		SINGLE_OPTION_SELECTED({commit}){
-			//console.log(payload);
-			commit('SINGLE_OPTION_SELECTED');
+		"IS_READY" ({commit}){
+		//	console.log(payload);
+		//	commit('SINGLE_OPTION_SELECTED');
 			
-		},
-		SINGLE_OPTION_CHANGED({commit}){
-			console.log("HI" + commit);
-			//commit('SINGLE_OPTION_SELECTED');
-			
-		},
-		SHOPIFY_DATA_COMPLETE ({ commit }) {
-			return new Promise((resolve, reject) => {
-				setTimeout(() => {
-					commit('SHOPIFY_DATA_COMPLETE')
-					resolve()
-				}, 1000)
-			})
 		}
 	}
 })
