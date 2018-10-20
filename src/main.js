@@ -4,15 +4,28 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import data from './data.json';
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-    store,
-  components: { App },
-  template: '<App/>'
-})
 
+
+function initVue(variable){
+	new Vue({
+		el: '#productapp',
+		data: {
+			vueProduct : variable
+		},
+		props: ['products'],
+		router,
+		store,
+		components: { App },
+		template: '<App products="products"/>'
+	})
+	
+	
+}
+/* eslint-disable no-new */
+
+
+initVue(data);

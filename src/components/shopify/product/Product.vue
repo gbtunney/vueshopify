@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div >
 		<ProductImages :images="CurrentProduct.images"></ProductImages>
 
 		PRODUCT: {{CurrentProduct.title}} ID: {{CurrentProduct.id}}
@@ -13,13 +13,15 @@
 	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
 	import store from '@/store'
+	import { mapState, mapActions } from "vuex";
 
 	export default {
 		name: 'Product',
 		components: {
 			productOptionSelect,ProductImages
 
-		},
+		},	props: ['shopifyproducts'],
+
 		mounted: function() {
 			let self = this;
 			store.subscribe((mutation, state) => {
@@ -31,7 +33,20 @@
 				}
 			});
 
-			store.commit('SHOPIFY_DATA_INIT', this.$data.productsData);
+			//this.getProducts();
+
+
+			/*store.dispatch("getProducts", { params: {product_id:18250174431350}, data: {product_id:18250174431350}  }).then(function(result){
+
+				//this.CurrentProduct =store.getters.products[3];
+				console.log('!!!products retrieved',result);
+				store.commit('SHOPIFY_DATA_INIT',result.data.products);
+			})*/
+
+
+
+//1919179161718
+
 
 		}, computed: {
 			DATASTORE: function() {
@@ -52,7 +67,10 @@
 			variantChanged: function(variant) {
 				console.log(">>>>>>>>>>>.NEW VARIANT", variant)
 				store.commit('CURRENT_VARIANT_CHANGED', variant);
-			}
+			},
+			...mapActions([
+				"getProducts"
+			])
 		},
 		data() {
 			return {

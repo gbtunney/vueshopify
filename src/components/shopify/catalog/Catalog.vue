@@ -8,7 +8,6 @@
 	<br>
 	<button @click="getProduct({ params: { id: 12 } })">get post with id 12</button>
 	<br>
-	<code>{{ product || "post with id 12 not fetched yet" }}</code>
 
 </div>
 </template>
@@ -26,9 +25,10 @@
 		props: {
 		},
 		computed: mapState({
-			products: state => state.products,
-			product: state => state.product
+			products: state => state._products,
 		}),
+		created:function(){
+		},
 		methods: {
 			...mapActions([
 				"getProduct",

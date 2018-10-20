@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import shopify from "./shopify";
 
 export const SHOPIFY_DATA_INIT = 'SHOPIFY_DATA_INIT';
 
@@ -10,11 +11,24 @@ export const GET_SHOPIFY_DATA = 'GET_SHOPIFY_DATA';
 export const SINGLE_OPTION_CHANGED = 'SINGLE_OPTION_CHANGED';
 export const SINGLE_OPTION_SELECTED = 'SINGLE_OPTION_SELECTED';
 export const SHOPIFY_DATA_COMPLETE = 'SHOPIFY_DATA_COMPLETE';
+
+
+//shopify...
+
+
+
+
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+
+const person1 = { name: 'David Walsh', age: 33 };
+const person2 = { name: 'David Walsh Jr.', role: 'kid' };
+
+const SHOPIFY = new Vuex.Store({
+	...shopify
+});
+const BASESTORE = {
 	state: {
-		_products: false,
 		_currentProduct: false,
 		_variants: false,
 		_currentVariant: false,
@@ -44,9 +58,9 @@ export default new Vuex.Store({
 		},
 		CurrentOptionsSelected: state => {
 			return state._currentOptionsSelected;
-		}
+		},
 	},
-	mutations: {
+	mutations: {...{
 		increment(state) {
 			state.count++
 		},
@@ -81,6 +95,7 @@ export default new Vuex.Store({
 		[SHOPIFY_DATA_READY](state, products) {
 		
 		},
+		
 		["SHOPIFY_DATA_INIT"](state, products) {
 			this.state._products = products;
 			if (!this.state._currentProduct){
@@ -100,7 +115,7 @@ export default new Vuex.Store({
 		[SHOPIFY_DATA_COMPLETE](state) {
 			//	console.log('data completed mutation');
 		}
-	},
+	}},
 	actions: {
 		increment(context) {
 			context.commit('increment')
@@ -115,5 +130,13 @@ export default new Vuex.Store({
 			//	commit('SINGLE_OPTION_SELECTED');
 			
 		}
-	}
-})
+	},
+}
+
+
+ BASESTORE.mutations = {...BASESTORE.mutations, ...shopify.mutations}
+  BASESTORE.actions = {...BASESTORE.actions, ...shopify.actions}
+BASESTORE.state = {...BASESTORE.state, ...shopify.state}
+
+console.log(BASESTORE);
+export default new Vuex.Store(BASESTORE);
