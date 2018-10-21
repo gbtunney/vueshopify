@@ -66,22 +66,34 @@
 		components: {
 			 Multiselect
 		}, props: {
-
+			variantID:{
+				default: undefined,
+            }
 		},
         created:function(){
 
 
 			store.subscribe((mutation, state) => {
+				if (mutation.type=="CURRENT_VARIANT_CHANGED"){
+
+					if (state["_currentVariant"]) {
+						this.SelectedVariant = state["_currentVariant"];
+					}
+				}
+
 				if (mutation.type=="SET_CURRENT_PRODUCT"){
 					this.$data.variants =state["_variants"];
 					this.$data.options =state["_options"];
-					console.log("CALLUBG DEFAULT VARIANT", state["_variants"]);
 
 					if ( this.$data.selectedVariant.length<= 0 ){
 
+						//throw this.$data._defaultVariantIndex;
 						if (  this.$data._defaultVariantIndex && (this.$data.variants.length >= this.$data._defaultVariantIndex )){
+							//throw this.$data.variants[this.$data._defaultVariantIndex-1];
 							this.SelectedVariant=this.$data.variants[this.$data._defaultVariantIndex-1];
 						}else{
+							//throw "hi";
+
 							this.SelectedVariant=this.$data.variants[0];
 						}
 					}

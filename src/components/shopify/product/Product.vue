@@ -2,7 +2,7 @@
 	<div >
 		<ProductImages :images="CurrentProduct.images"></ProductImages>
 		PRODUCT: {{CurrentProduct.title}} ID: {{CurrentProduct.id}}
-		<productOptionSelect  v-on:variant="variantChanged"></productOptionSelect>
+		<productOptionSelect  v-bind:variantID="18250174726262" v-on:variant="variantChanged"></productOptionSelect>
 	</div>
 </template>
 
@@ -20,18 +20,18 @@
 			productOptionSelect, ProductImages
 
 		}, props: {
-			product,
-			selectedvariant,
+			product:{
+				default: null    //1919179161718
+			},
+			selectedvariant:{
+				default: null
+			},
 			shopifyproducts:
 				{
 					type: Array,
 					default: []
 				}
-			,
-			shopifyproductID: {
-				type: String,
-				default: '1919179161718'
-			}
+
 		},
 		mounted: function() {
 			let self = this;
@@ -40,29 +40,6 @@
 				//console.log(self);
 
 				if (mutation.type == "SHOPIFY_DATA_READY"){
-				//	self.CurrentProduct = state["_currentProduct"];
-
-
-					if ( this.shopifyproductID){
-
-						let productID = this.shopifyproductID;
-						var foundProduct = this.shopifyproducts.filter(function(product){
-
-							if (product.id ==productID ){
-
-								return true;
-							}
-						})
-						if (foundProduct.length==1){
-							store.dispatch('SET_CURRENT_PRODUCT', foundProduct[0]).then(function(res){
-								console.log("complete",res);
-
-							})
-						}
-					}
-
-
-
 				}
 			});
 			/*store.dispatch("getProducts", { params: {product_id:18250174431350}, data: {product_id:18250174431350}  }).then(function(result){
@@ -73,11 +50,52 @@
 			})*/
 
 
-			store.commit('SHOPIFY_DATA_INIT',this.shopifyproducts);
 
-//1919179161718
+/*
+			if ( this.shopifyproductID){
 
 
+			}
+*/
+
+			let newState = {
+				_products: [],
+				_productID: false,
+				_currentProduct: false,
+				_currentVariant: false,
+				_currentVariantID:false
+			}
+			if (this.product ){
+				if ( typeof this.product == "number" || typeof this.product == "string" ){
+
+				var productid =	parseInt(this.product);
+				console.log("--setting");
+					newState._productID=productid;
+				}else{
+					newState._currentProduct = this.product;
+				}
+			}
+
+			if (this.selectedvariant ){
+				console.log("SELECTED VARIANT",this.selectedvariant);
+
+				if ( typeof this.selectedvariant == "number" || typeof this.selectedvariant == "string" ){
+					var variantid =	parseInt(this.selectedvariant);
+					newState._currentVariantID=variantid;
+				}else{
+					newState._currentVariant = this.selectedvariant;
+				}
+			}
+
+			//if (this.shopifyproducts){
+				newState._products =this.shopifyproducts ;
+			//}
+
+			//console.log("TESTING NEW STATE" , newState);
+			store.dispatch('SHOPIFY_DATA_INIT', newState).then(function(res){
+				console.log("complete",res);
+
+			})
 		}, computed: {
 			DATASTORE: function() {
 				return store.getters;

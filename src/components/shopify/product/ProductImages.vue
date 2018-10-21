@@ -48,10 +48,11 @@
 			})
 			store.subscribe((mutation, state) => {
 				if (mutation.type == "PRODUCT_IMAGE_CHANGED"){
+					//throw mutation.payload.image;
 					self.CurrentImage = mutation.payload.image;
 				}
 			});
-			this.$data._productImages = this.images;
+			//this.$data._productImages = this.images;
 		},
 		mounted: function() {
 
@@ -63,6 +64,7 @@
 			CurrentImageIndex: function() {
 				let requestedImageID = this.$data._currentImage.id;
 				let self = this;
+				throw requestedImageID;
 
 				var newIndex = this.images.findIndex(function(image) {
 					if (requestedImageID == image.id){
@@ -71,6 +73,14 @@
 				});
 
 				return newIndex;
+			},
+			Images:{
+				get:function() {
+return;
+				},
+					set:function(){
+
+					}
 			},
 			CurrentImage: {
 				get: function() {
@@ -106,6 +116,7 @@
 				_productImages: [],
 				_currentImage: undefined,
 				_currentSlideIndex: 0,
+				_images: undefined,
 				swiperOption: {
 
 					speed: 4000,

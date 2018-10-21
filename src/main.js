@@ -6,7 +6,7 @@ import store from './store'
 import data from './data.json';
 import Product from './components/shopify/product/Product';
 Vue.config.productionTip = false
-
+console.log("product");
 //Vue.component('Product', { /* ... */ });
 
 var vm = new Vue({
@@ -15,11 +15,13 @@ var vm = new Vue({
 		Product
 	},
 	data:{
-		
-		shopifyproducts : data.products
+		product: data.products[0],
+		selectedvariant: "18250174726262",
+		shopifyproducts : data.products,
+		shopifyproductID : "1919179161718"
 	},
 	store,
-	template: '<Product v-bind:shopifyproducts="shopifyproducts"></Product>',
+	template: '<Product v-bind:selectedvariant="selectedvariant" v-bind:product="shopifyproductID" v-bind:shopifyproducts="shopifyproducts"></Product>',
 })
 
 

@@ -29,6 +29,7 @@ const SHOPIFY = new Vuex.Store({
 });
 const BASESTORE = {
 	state: {
+		_products: [],
 		_currentProduct: false,
 		_variants: false,
 		_currentVariant: false,
@@ -70,10 +71,14 @@ const BASESTORE = {
 		["PRODUCT_IMAGE_REQUESTED"](state) {
 			let requestedImageID = this.state._currentVariant.image_id;
 			var newImage = this.state._currentProduct.images.find(function(image) {
+				
 				if (requestedImageID == image.id){
+					
+					
 					return true;
 				}
 			});
+			console.log("CURRENT image IS ",newImage);
 			
 			this.commit('PRODUCT_IMAGE_CHANGED', {
 				image: newImage
@@ -88,6 +93,8 @@ const BASESTORE = {
 		[SINGLE_OPTION_CHANGED](state, index, optionValue) {
 		},
 		[CURRENT_VARIANT_CHANGED](state, payload) {
+			console.log('----VARIANT ' , payload);
+			
 			this.state._currentVariant = payload;
 			this.commit('PRODUCT_IMAGE_REQUESTED');
 			
@@ -96,22 +103,70 @@ const BASESTORE = {
 		
 		},
 		
-		["SHOPIFY_DATA_INIT"](state, products, currentproduct) {
-			this.state._products = products;
+		["SHOPIFY_DATA_INIT"](state,  newState) {
 			
+			console.log("INITING DATA~!!!",newState);
 			
-		/*	if (!this.state._currentProduct){
+			let self = this;
+			let NewState= newState
+			if ( newState ){
+				this.state._products = newState._products;
+				
+				let variantID ;
+				
+				
+				if (newState._currentVariantID  ){
+					variantID=newState._currentVariantID;
+				};
+				if (newState._currentProduct){
+					//self.dispatch("SET_CURRENT_PRODUCT", newState._currentProduct,variantID)
+				}
+				
+				if (newState._productID){
+					this.dispatch('GET_CURRENT_PRODUCT_BY_ID', newState._productID).then((result) => {
+						let self = this;
+						var payload={
+							product:result,
+							VariantID: variantID
+						}
+						self.dispatch("SET_CURRENT_PRODUCT", payload).then(function(res){
+						
+						})
+						//console.log("PRODUCT ID DATA  DATA~!!!", result);
+					})
+				}
+				
+			}
+			
+		/*
+		let newState = {
+				_products: [],
+				_productID: false,
+				_currentProduct: false,
+				_currentVariant: false,
+				_currentVariantID:false
+			}
+		if (!this.state._currentProduct){
 				this.state._currentProduct = this.state._products[0];
 			}
 			*/
-			this.commit('SHOPIFY_DATA_READY', this.state._products);
+			//this.commit('SHOPIFY_DATA_READY', this.state._products);
 			
 		},
-		["SET_CURRENT_PRODUCT"](state, product) {
-			
+		["SET_CURRENT_PRODUCT"](state, payload ) {
+			let product ;
+			let variantID;
+			if (payload.hasOwnProperty('VariantID') ){
+				variantID=payload['VariantID'];
+			}
+			if (payload.hasOwnProperty('product') ){
+				product = payload['product'];
+			}else if (payload.hasOwnProperty('id')){
+				product=payload;
+			}else{
+				throw "ERROR!",payload;
+			}
 			this.state._currentProduct = product;
-			//console.log("current prodyct set",this.state._currentProduct );
-			
 			if (this.state._currentProduct){
 				
 				//setting variants
@@ -122,13 +177,67 @@ const BASESTORE = {
 				if (this.state._currentProduct.hasOwnProperty('options')){
 					this.state._options = this.state._currentProduct['options'];
 				}
+				
+				if (variantID){
+					//throw variantID;
+					
+					console.log("TRYING TO SET AN ID" ,variantID);
+					let self = this;
+					this.dispatch('GET_CURRENT_VARIANT_BY_ID', variantID).then((result) => {
+						console.log("VARIANT ID  ID DATA  DATA~!!!", result);
+						
+						self.commit('CURRENT_VARIANT_CHANGED', result)
+					})
+				}
+			
 			}
+			
+			console.log("STATE IS!" , this.state)
 		},
 		[SHOPIFY_DATA_COMPLETE](state) {
 			//	console.log('data completed mutation');
 		}
 	}},
 	actions: {
+		GET_CURRENT_VARIANT_BY_ID({dispatch, commit}, id) {
+			if (!this.state._variants){
+				return false;
+			}
+			let variantID = id;
+			var foundVariant = this.state._variants.filter(function(variant) {
+				console.log("found!", variantID, variant.id)
+				
+				if (variant.id == variantID){
+					return true;
+				}
+			})
+			
+			if (foundVariant.length == 1){
+				return foundVariant[0];
+			} else {
+				throw `ERROR FINDING VARIANT${productID}`
+			}
+			return false;
+		},
+		GET_CURRENT_PRODUCT_BY_ID({dispatch, commit}, id) {
+			if (!this.state._products){
+				return false;
+			}
+			let productID = id;
+			var foundProduct = this.state._products.filter(function(product) {
+				if (product.id == productID){
+					console.log("found!", productID, product.id)
+					return true;
+				}
+			})
+			
+			if (foundProduct.length == 1){
+				return foundProduct[0];
+			} else {
+				throw `ERROR FINDING PRODUCT${productID}`
+			}
+			return false;
+		},
 		increment(context) {
 			context.commit('increment')
 		},
@@ -137,8 +246,15 @@ const BASESTORE = {
 				commit('increment2')
 			}, 10000)
 		},
-		"SET_CURRENT_PRODUCT"({commit,state},product) {
-				commit('SET_CURRENT_PRODUCT',product);
+		"SET_CURRENT_PRODUCT"({commit,state},payload) {
+			
+			commit('SET_CURRENT_PRODUCT',payload);
+			
+		},
+		"SHOPIFY_DATA_INIT"({commit,state},newState) {
+			
+			
+			commit('SHOPIFY_DATA_INIT',newState);
 			
 		},
 		"IS_READY"({commit}) {
