@@ -1,14 +1,33 @@
 <template>
   <div id="app">
-	  HELLO!
     <img src="./assets/logo.png">
-    <router-view/>
+
+
+<product></product>
   </div>
 </template>
 
 <script>
+	import Vue from 'vue'
+	import product from '@/components/shopify/product/Product'
+
+
 export default {
-  name: 'App'
+  name: 'App',
+	components: {
+		product
+
+	},data:{
+		_products:null
+	},
+	props:{
+
+	},
+	created:function(){
+
+//  	console.log("data" +this.productsdata);
+  	//this.$data._products= this.productsdata
+	}
 }
 </script>
 

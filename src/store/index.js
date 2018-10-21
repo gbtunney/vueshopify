@@ -96,22 +96,34 @@ const BASESTORE = {
 		
 		},
 		
-		["SHOPIFY_DATA_INIT"](state, products) {
+		["SHOPIFY_DATA_INIT"](state, products, currentproduct) {
 			this.state._products = products;
-			if (!this.state._currentProduct){
+			
+			
+		/*	if (!this.state._currentProduct){
 				this.state._currentProduct = this.state._products[0];
 			}
-			if (state._currentProduct){
+			*/
+			this.commit('SHOPIFY_DATA_READY', this.state._products);
+			
+		},
+		["SET_CURRENT_PRODUCT"](state, product) {
+			
+			this.state._currentProduct = product;
+			//console.log("current prodyct set",this.state._currentProduct );
+			
+			if (this.state._currentProduct){
+				
+				//setting variants
 				if (state._currentProduct.hasOwnProperty('variants')){
 					this.state._variants = state._currentProduct['variants'];
 				}
+				//setting options
 				if (this.state._currentProduct.hasOwnProperty('options')){
 					this.state._options = this.state._currentProduct['options'];
 				}
-				this.commit('SHOPIFY_DATA_READY', this.state._products);
 			}
 		},
-		
 		[SHOPIFY_DATA_COMPLETE](state) {
 			//	console.log('data completed mutation');
 		}
@@ -124,6 +136,10 @@ const BASESTORE = {
 			setTimeout(() => {
 				commit('increment2')
 			}, 10000)
+		},
+		"SET_CURRENT_PRODUCT"({commit,state},product) {
+				commit('SET_CURRENT_PRODUCT',product);
+			
 		},
 		"IS_READY"({commit}) {
 			//	console.log(payload);

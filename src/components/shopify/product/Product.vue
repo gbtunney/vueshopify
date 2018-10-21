@@ -1,7 +1,6 @@
 <template>
 	<div >
 		<ProductImages :images="CurrentProduct.images"></ProductImages>
-
 		PRODUCT: {{CurrentProduct.title}} ID: {{CurrentProduct.id}}
 		<productOptionSelect  v-on:variant="variantChanged"></productOptionSelect>
 	</div>
@@ -18,24 +17,54 @@
 	export default {
 		name: 'Product',
 		components: {
-			productOptionSelect,ProductImages
+			productOptionSelect, ProductImages
 
-		},	props: ['shopifyproducts'],
-
+		}, props: {
+			product,
+			selectedvariant,
+			shopifyproducts:
+				{
+					type: Array,
+					default: []
+				}
+			,
+			shopifyproductID: {
+				type: String,
+				default: '1919179161718'
+			}
+		},
 		mounted: function() {
 			let self = this;
 			store.subscribe((mutation, state) => {
-				//console.log(mutation.type)
+				console.log(mutation.type)
 				//console.log(self);
 
 				if (mutation.type == "SHOPIFY_DATA_READY"){
-					self.CurrentProduct = state["_currentProduct"];
+				//	self.CurrentProduct = state["_currentProduct"];
+
+
+					if ( this.shopifyproductID){
+
+						let productID = this.shopifyproductID;
+						var foundProduct = this.shopifyproducts.filter(function(product){
+
+							if (product.id ==productID ){
+
+								return true;
+							}
+						})
+						if (foundProduct.length==1){
+							store.dispatch('SET_CURRENT_PRODUCT', foundProduct[0]).then(function(res){
+								console.log("complete",res);
+
+							})
+						}
+					}
+
+
+
 				}
 			});
-
-			//this.getProducts();
-
-
 			/*store.dispatch("getProducts", { params: {product_id:18250174431350}, data: {product_id:18250174431350}  }).then(function(result){
 
 				//this.CurrentProduct =store.getters.products[3];
@@ -44,6 +73,7 @@
 			})*/
 
 
+			store.commit('SHOPIFY_DATA_INIT',this.shopifyproducts);
 
 //1919179161718
 
@@ -66,7 +96,11 @@
 		methods: {
 			variantChanged: function(variant) {
 				console.log(">>>>>>>>>>>.NEW VARIANT", variant)
-				store.commit('CURRENT_VARIANT_CHANGED', variant);
+
+				if ( variant != undefined){
+					store.commit('CURRENT_VARIANT_CHANGED', variant);
+
+				}
 			},
 			...mapActions([
 				"getProducts"

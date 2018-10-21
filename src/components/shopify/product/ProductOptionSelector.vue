@@ -72,9 +72,10 @@
 
 
 			store.subscribe((mutation, state) => {
-				if (mutation.type=="SHOPIFY_DATA_READY"){
+				if (mutation.type=="SET_CURRENT_PRODUCT"){
 					this.$data.variants =state["_variants"];
 					this.$data.options =state["_options"];
+					console.log("CALLUBG DEFAULT VARIANT", state["_variants"]);
 
 					if ( this.$data.selectedVariant.length<= 0 ){
 
@@ -82,7 +83,6 @@
 							this.SelectedVariant=this.$data.variants[this.$data._defaultVariantIndex-1];
 						}else{
 							this.SelectedVariant=this.$data.variants[0];
-							console.log("SETTING DEFAULT VARIANT", this.$data.variants[7]);
 						}
 					}
 					this.setSelectedOptions();
