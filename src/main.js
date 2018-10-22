@@ -4,8 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import data from './data.json';
+import { Slugify ,GDatamapper} from '@/gUtilities/main.js'
 //import Product from './components/shopify/product/Product';
 Vue.config.productionTip = false
+const schema = require("schm");
+import math from 'mathjs'
+import isColor  from 'is-color';
 
 var testProduct = {
 	"id": "1919179161718",
@@ -1138,6 +1142,53 @@ var testProduct = {
 	}
 };
 
+const nestedOptionSchema = {
+	values: {
+	
+	
+	}
+}
+
+/*const optionValues = {
+	id: 482394233443,
+	parent_id: 54545,
+	slug: Slugify
+	title: "orig value"
+	_index: 0,
+	tags: false,
+	swatch_image: fals  e,
+	color: "#ff0000"    ( typeof obj[key] == "string" ) ? Slugify(obj[key]) : ''
+};*/
+
+const optionValueDatamap={
+	slug: (obj,key ) => ( !obj[key] )? Slugify(obj['title']) : false ,
+	title: (obj,key)=> obj[key],
+	testing:"gillintunney",
+	id: (obj,key) => ( !obj[key] )? math.random(11111111111,999999999999999): false,
+}
+
+const testDataMap = {
+	currentvariant: function(obj,key){return new Array(obj[key])},
+	teststring : function (obj,key){ console.log("oing function now" , key,obj);return  `${obj[key]}have a nvery nice day` },
+	currentproduct: function(obj,key){
+		
+		return (typeof obj[key] == "string" || typeof obj[key] == "number" ) ?   `datatype error ${typeof obj[key]}` : (typeof obj[key] == "object"  ) ?  obj[key] : false;
+	},
+	products: function(obj,key){
+		
+		console.log("trying to make a product",obj[key],  typeof obj['currentproduct'])
+		if ( obj[key] === undefined || obj[key] === null ){
+			
+			if ( obj['currentproduct'] && (typeof obj['currentproduct'] == "object") ){
+				return [ obj['currentproduct'] ]
+			}
+		}
+		else{
+			(typeof obj[key] == "array"  ) ? obj[key] : (typeof obj[key] == "object"  ) ? ["new array"] : false;
+		}
+	}
+};
+
 
 const testData = {
 	testme:"jklsdjl",
@@ -1147,7 +1198,15 @@ const testData = {
 	products:false
 };
 
-const testDataMap = {
+const productListSchema = schema({
+	products: Number,
+})
+
+var newObj = productListSchema.parse(data.products);
+var arr = [...[data.products][0]];
+//console.log("parsed" , arr)
+
+const testDataMapBase = {
 	currentvariant: function(obj,key){return new Array(obj[key])},
 	teststring : function (obj,key){ console.log("oing function now" , key,obj);return  `${obj[key]}have a nvery nice day` },
 	currentproduct: function(obj,key){
@@ -1169,31 +1228,12 @@ const testDataMap = {
 };
 
 
-const GDatamapper = {
-	mapData : function(obj,map){
-		
-		let data_map = map;
-		let Obj= Object.create(obj);
-		//throw "mapping",
-		Object.keys(obj).forEach(function(key) {
-			console.log("!!!!!KEY IS" , key)
-			if (data_map.hasOwnProperty(key) && (typeof data_map[key]=='function') ){
-				Obj[key] = (data_map[key]).call(data_map[key],Obj,key);
-				//console.log("FOUND,calling" , obj );
-				
-			}else{
-				//console.log("false")
-			}
-		});
-		return Obj;
-}
+var myoptionvals = GDatamapper.expandToObject("test string ","title",{slug: false,id:false, mygillian: "test"});
+console.log(myoptionvals);
+console.log( GDatamapper.mapData(myoptionvals,optionValueDatamap));
 
-};
-
-console.log( GDatamapper.mapData(testData,testDataMap));
-
-
-const schema = require("schm");
+//console.log( GDatamapper.mapData(testData,testDataMap));
+///console.log(GDatamapper.parseToDictionary(data.products,"id" , {testaddition: "message to people"}).get(1919165890678));
 
 const exclaim = prevSchema => prevSchema.merge({
 	parsers: {
@@ -1214,13 +1254,7 @@ const testSchema = schema(
 	},
 	exclaim
 );
-const userSchema = schema({
-	name: String,
-	age: {
-		type: Number,
-		min: 18,
-	},
-})
+
 
 
 
@@ -1246,7 +1280,6 @@ const PRODUCT_VIEW_SCHEMA= schema(
 var newObj = PRODUCT_VIEW_SCHEMA.parse(USER_INPUTED_DATA);
 
 
-console.log(newObj);
 
 async function asyncFun () {
 	var value = 10
@@ -1254,7 +1287,6 @@ async function asyncFun () {
 }
 (async () => { console.log(await asyncFun()) })()
 
-console.log(newObj)
 /*var vm = new Vue({
 	el: '#productapp',
 	components: {
