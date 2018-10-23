@@ -44,15 +44,27 @@ export const GDatamapper = {
 		});
 		return Obj;
 	},
-	expandToObject: function(_value ,_keyprop,_addprops={} ){
+	expandToObject: function(_value ,_newprop=false,_addprops={} ){
 		if( typeof _value == "string" ||  typeof _value == "number"  ){
 			console.log("trying to convert" , _value)
-			return	Object.assign({[_keyprop.toString()] :_value  }, _addprops);
+			if ( _newprop){
+				return	Object.assign({[_newprop.toString()] :_value  }, _addprops);
+			}else{
+				return	Object.assign({} , _addprops);
+			}
 		}else{
 			return _value;
 		}
 	},
-	parseToDictionary : function( _array ,_keyprop,_addprops ){
+	/*expandToObject: function(_value, _keyprop, _addprops = {}) {
+		if (typeof _value == "string" || typeof _value == "number"){
+			console.log("trying to convert", _value)
+			return Object.assign({[_keyprop.toString()]: _value}, _addprops);
+		} else {
+			return _value;
+		}
+	},*/
+	parseToDictionary : function( _array ,_keyprop,_addprops ={}){
 		var _dictionary = new Map();
 		//throw typeof _array;
 		
@@ -66,7 +78,7 @@ export const GDatamapper = {
 					throw "its an array need to map";
 				}else{
 					var _newObject = Object.assign({_index: i }, _currObject);
-					_dictionary.set(_newObject[_keyprop], _newObject);
+					_dictionary.set(_currObject[_keyprop].toString(), _newObject);
 				}
 				
 			}

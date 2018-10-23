@@ -10,6 +10,7 @@ Vue.config.productionTip = false
 const schema = require("schm");
 import math from 'mathjs'
 import isColor  from 'is-color';
+import randomColor from 'randomcolor';
 
 var testProduct = {
 	"id": "1919179161718",
@@ -1149,6 +1150,96 @@ const nestedOptionSchema = {
 	}
 }
 
+const GDataMap = {
+		adapters: {
+			default: {
+				id: (obj, key) => ( !obj[key] )? false: true,
+				slug: (obj, key) => ( !obj[key] )? Slugify(obj['title']): false ,
+				title: (obj, key)=> obj[key],
+				testing: "gillintunney"
+			}
+	},
+	validate: () =>  schema({
+		
+		id: { type: Number, default: Math.round(math.random(11111111111, 999999999999999))},
+		parent_id: { type: Number, default: false },
+		slug: { type: String, required: true },
+		title: {type: String },
+		_index: { type: Number, required: true },
+		swatch_image: {type: Number, default: false },
+		color: {type: String, default: randomColor() }
+		
+	})
+}
+
+let optionsArray = data.products[4].options;
+
+for (let i = 0;i<optionsArray.length;i++){
+	console.log("before parse",optionsArray[i]);
+	
+	var currentObj  = optionsArray[i];
+	
+	
+	var OPTIONS_SCHEMA =  schema({
+		
+		id: {type: Number, default: math.random(11111111111, 999999999999999)},
+		name: {type: String, default: false},
+		slug: {type: String, default: Slugify(currentObj["name"]), required: true},
+		position: {type: Number},
+		_index: {type: Number, default: i, required: true},
+		product_id: {type: Number, required: true, default: false},
+		values: {type: Array, default: false}
+		
+	});
+	
+	currentObj= OPTIONS_SCHEMA.parse(currentObj);
+		//console.log("currentObj:::::",currentObj.values.length);
+		for (var u=0;u< currentObj.values.length;u++){
+		//var newValueObj = GDatamapper.expandToObject(currentObj.values[u],{slug: currentObj.values[u],_index:u, 	parent_id: optionsArray[i].id,gillian : "test"})
+			//var newValueObj = GDatamapper.mapData(currentObj.values[u],GDataMap.adapters.default);
+			//console.log("VALUE :" ,newValueObj);
+			//newValueObj = Object.assign(newValueObj,{_index:u});
+		var newValueObj=	GDatamapper.expandToObject(currentObj.values[u],"title",{slug: Slugify(currentObj.values[u]),_index:u, 	parent_id: optionsArray[i].id,gillian : "test"})
+			console.log("FINSVALUE :" ,newValueObj);
+			//newValueObj=GDatamapper.mapData(currentObj.values[u],GDataMap.adapters.default);
+			newValueObj= GDataMap.validate().parse(newValueObj);
+			
+			
+			
+			console.log("trasformer :" ,newValueObj);
+			
+			//{slug: currentObj.values[u],_index:u, 	parent_id: optionsArray[i].id,gillian : "test"}
+			currentObj.values[u] = newValueObj;
+			
+		}
+	currentObj.valueDictionary =GDatamapper.parseToDictionary ( currentObj.values ,"id" );
+	
+	//GDatamapper.parseToDictionary ( currentObj.values ,"id" );
+	//var currentObj = Object.assign(currentObj.values,"valueDictionary",)
+	
+	
+	
+	throw "FINISHED ARRAY", currentObj.valueDictionary;
+	/*
+	var _newOptionsArr = {
+		id: 2643071074422
+		name: "Color"
+		position: 1
+		product_id: 1919179161718
+		values: (23) ["Alumroot", "Ash", "Basswood", "Bee-Balm", "Bluebell", "Cresheim Creek", "Cedar Berry", "Fringetree", "Ganoga Falls", "Gingko Nut", "Gray Birch", "Juneberry", "Pachysandra", "Porcupine", "Purple Loosestrife", "Red Squirrel", "River Oat", "Scarlet Oak", "Steelhead", "Wild Geranium", "Wissahickon", "Wood Dove", "Wood Fern"]
+	};
+	*/
+	//var _newOptionValuesObj  = GDatamapper.expandToObject("test string ","title",{slug: false,id:false, mygillian: "test"})
+}
+//var myoptionvals = GDatamapper.expandToObject("test string ","title",{slug: false,id:false, mygillian: "test"});
+//console.log(myoptionvals);
+//console.log( GDatamapper.mapData(myoptionvals,optionValueDatamap));
+
+/*
+{slug: false,id:false, mygillian: "test"}
+ */
+
+
 /*const optionValues = {
 	id: 482394233443,
 	parent_id: 54545,
@@ -1156,16 +1247,10 @@ const nestedOptionSchema = {
 	title: "orig value"
 	_index: 0,
 	tags: false,
-	swatch_image: fals  e,
+	swatch_image: false,
 	color: "#ff0000"    ( typeof obj[key] == "string" ) ? Slugify(obj[key]) : ''
 };*/
 
-const optionValueDatamap={
-	slug: (obj,key ) => ( !obj[key] )? Slugify(obj['title']) : false ,
-	title: (obj,key)=> obj[key],
-	testing:"gillintunney",
-	id: (obj,key) => ( !obj[key] )? math.random(11111111111,999999999999999): false,
-}
 
 const testDataMap = {
 	currentvariant: function(obj,key){return new Array(obj[key])},
@@ -1188,6 +1273,7 @@ const testDataMap = {
 		}
 	}
 };
+
 
 
 const testData = {
@@ -1228,9 +1314,6 @@ const testDataMapBase = {
 };
 
 
-var myoptionvals = GDatamapper.expandToObject("test string ","title",{slug: false,id:false, mygillian: "test"});
-console.log(myoptionvals);
-console.log( GDatamapper.mapData(myoptionvals,optionValueDatamap));
 
 //console.log( GDatamapper.mapData(testData,testDataMap));
 ///console.log(GDatamapper.parseToDictionary(data.products,"id" , {testaddition: "message to people"}).get(1919165890678));
