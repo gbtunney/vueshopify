@@ -19,18 +19,15 @@
 		components: {
 			productOptionSelect, ProductImages
 
-		}, props: {
-			product:{
-				default: null    //1919179161718
-			},
-			selectedvariant:{
-				default: null
-			},
-			shopifyproducts:
-				{
-					type: Array,
-					default: []
-				}
+		},   props:{
+			productID: String,
+			currentproduct:Object,
+			products: Array,
+
+			variantID:String,
+			currentvariant:Object,
+		},
+		beforeCreate: function(){
 
 		},
 		mounted: function() {

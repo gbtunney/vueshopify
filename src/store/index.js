@@ -103,40 +103,12 @@ const BASESTORE = {
 		
 		},
 		
-		["SHOPIFY_DATA_INIT"](state,  newState) {
+		["SHOPIFY_DATA_INIT"](state,  payload) {
 			
-			console.log("INITING DATA~!!!",newState);
+			console.log("INITING DATA~!!!",payload);
 			
-			let self = this;
-			let NewState= newState
-			if ( newState ){
-				this.state._products = newState._products;
-				
-				let variantID ;
-				
-				
-				if (newState._currentVariantID  ){
-					variantID=newState._currentVariantID;
-				};
-				if (newState._currentProduct){
-					//self.dispatch("SET_CURRENT_PRODUCT", newState._currentProduct,variantID)
-				}
-				
-				if (newState._productID){
-					this.dispatch('GET_CURRENT_PRODUCT_BY_ID', newState._productID).then((result) => {
-						let self = this;
-						var payload={
-							product:result,
-							VariantID: variantID
-						}
-						self.dispatch("SET_CURRENT_PRODUCT", payload).then(function(res){
-						
-						})
-						//console.log("PRODUCT ID DATA  DATA~!!!", result);
-					})
-				}
-				
-			}
+			
+			
 			
 		/*
 		let newState = {
@@ -251,10 +223,10 @@ const BASESTORE = {
 			commit('SET_CURRENT_PRODUCT',payload);
 			
 		},
-		"SHOPIFY_DATA_INIT"({commit,state},newState) {
+		"SHOPIFY_DATA_INIT"({commit,state},payload) {
 			
 			
-			commit('SHOPIFY_DATA_INIT',newState);
+			commit('SHOPIFY_DATA_INIT',payload);
 			
 		},
 		"IS_READY"({commit}) {

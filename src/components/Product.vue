@@ -46,6 +46,17 @@
 			ProductOptionSelector,
 			gMutuallyExclusiveButtonGroup
 		},
+        props:{
+		productID: String,
+            currentproduct:Object,
+			products: Array,
+
+		variantID:String,
+		currentvariant:Object,
+        },
+        beforeCreate: function(){
+
+        },
 		data () {
 			return {
 				_buttons: [{
@@ -75,20 +86,6 @@
 				}
 				]
 			}
-		},
-		created: function (evt) {
-
-			//store.dispatch('GET_SHOPIFY_DATA');
-
-
-		//	store.commit('SHOPIFY_DATA_INIT',CONFIG.products);
-
-            let mystore = store;
-
-		//	store.dispatch('SHOPIFY_DATA_COMPLETE').then(() => {
-			//	this.singleOptionSelected(1,'Wild Geranium');
-			//})
-
 		},
 		computed: {
 			Buttons:  function() {

@@ -1,6 +1,7 @@
-export function Multiply(a, b) {
-	return a * b;
-}
+import math from 'mathjs'
+import isColor from 'is-color';
+import randomColor from 'randomcolor';
+
 export function Slugify(text) {
 				// https://gist.github.com/mathewbyrne/1280286
 		return text.toString().toLowerCase()
@@ -56,19 +57,8 @@ export const GDatamapper = {
 			return _value;
 		}
 	},
-	/*expandToObject: function(_value, _keyprop, _addprops = {}) {
-		if (typeof _value == "string" || typeof _value == "number"){
-			console.log("trying to convert", _value)
-			return Object.assign({[_keyprop.toString()]: _value}, _addprops);
-		} else {
-			return _value;
-		}
-	},*/
 	parseToDictionary : function( _array ,_keyprop,_addprops ={}){
 		var _dictionary = new Map();
-		//throw typeof _array;
-		
-		//throw "calling", typeof _array;
 		if ( typeof _array == "object" ){
 			for ( var i = 0 ; i < _array.length; i++){
 				
