@@ -1,15 +1,16 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
+//import App from './App'
 import store from './store'
 import data from './data.json';
 import {Slugify, GDatamapper} from '@/gUtilities/main.js'
-//import Product from './components/shopify/product/Product';
+import Product from './components/shopify/product/Product';
 Vue.config.productionTip = false
 const schema = require("schm");
 
-
+console.log(data);
+/*
 function parseOptions(inOptions) {
 	
 	const GDataMapOptionValues = {
@@ -176,9 +177,10 @@ const testDataMapBase = {
 		}
 	}
 };
+*/
 
 
-const PRODUCT_VIEW_DATA ={
+const productViewData ={
 	productID: 1919179161718,
 	products: data.products,
 	variantID:false,
@@ -187,51 +189,22 @@ const PRODUCT_VIEW_DATA ={
 
 //myFunc:()=> (!PRODUCT_VIEW_DATA.currentproduct && PRODUCT_VIEW_DATA.productID ) ? productDictionary,get(PRODUCT_VIEW_DATA.productID ) : _products[0]
 
-const PRODUCT_VIEW_SCHEMA = schema(
-	{
-		productID: {type: String, default: data.products[0].id},
-		variantID: {type: Number, default: data.products[0].variants[0].id},
-		products: {type: Array, required: true},
-		currentvariant: { type: Object, required:true,
-		default: function(){
-			if (!PRODUCT_VIEW_DATA.currentvariant && PRODUCT_VIEW_DATA.variantID) {
-			return variantDictionary.get(PRODUCT_VIEW_DATA.variantID.toString() )
-			}else{
-				
-				return  parsedVariants[0]
-			}
-		}},
-		currentproduct:
-		{type: Object,
-			default: function( ){
-				
-				console.log("hi");
-				if  (!PRODUCT_VIEW_DATA.currentproduct && PRODUCT_VIEW_DATA.productID ){
-					return productDictionary.get(PRODUCT_VIEW_DATA.productID.toString() );
-					
-				}else{
-					return _products[0]
-				}
-			}
-		}
-})
 
-throw PRODUCT_VIEW_SCHEMA.parse(PRODUCT_VIEW_DATA);
-/*
+
+console.log(data)
+//let _products = data
+
 var vm = new Vue({
 	el: '#productapp',
 	components: {
 		Product
 	},
-	data:{
-		product: data.products[0],
-		selectedvariant: "18250174726262",
-		shopifyproducts : data.products,
-	shopifyproductID : "1919179161718"
+	data: {
+		products: data.products
 	},
 	store,
-	template: '<Product v-bind:selectedvariant="selectedvariant" v-bind:product="shopifyproductID" v-bind:shopifyproducts="shopifyproducts"></Product>',
-})*/
+	template: '<Product  :productID="1919179161718" :products="products"></Product>',
+})
 
 /* eslint-disable no-new */
 

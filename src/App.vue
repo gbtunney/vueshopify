@@ -3,31 +3,25 @@
     <img src="./assets/logo.png">
 
 
-<product></product>
+
   </div>
 </template>
 
 <script>
 	import Vue from 'vue'
-	import product from '@/components/shopify/product/Product'
+	//import product from '@/components/shopify/product/Product'
 
 
 export default {
   name: 'App',
 	components: {
-		product
+
 
 	},data:{
-		_products:null
 	},
 	props:{
-
+		productview:Object
 	},
-	created:function(){
-
-//  	console.log("data" +this.productsdata);
-  	//this.$data._products= this.productsdata
-	}
 }
 </script>
 
