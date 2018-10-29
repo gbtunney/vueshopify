@@ -183,7 +183,7 @@ const testDataMapBase = {
 const productViewData ={
 	productID: 1919179161718,
 	products: data.products,
-	variantID:false,
+	variantID:18250174988406,
 	currentvariant:false,
 };
 
@@ -203,7 +203,7 @@ var vm = new Vue({
 		products: data.products
 	},
 	store,
-	template: '<Product  :productID="1919179161718" :products="products"></Product>',
+	template: `<Product  :variantID="${productViewData.variantID}" :productID="${productViewData.productID}" :products="products"></Product>`,
 })
 
 /* eslint-disable no-new */

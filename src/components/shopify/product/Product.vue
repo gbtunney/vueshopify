@@ -1,21 +1,26 @@
 <template>
 	<div >
-		<ProductImages :images="CurrentProduct"></ProductImages>
-		PRODUCT: {{CurrentProduct.title}} ID: {{CurrentProduct.id}}
-		<productOptionSelect  v-bind:variantID="18250174726262" v-on:variant="variantChanged"></productOptionSelect>
+		<ProductImages ></ProductImages>
+
+		<productOptionSelect  :variants="Variants"  :selectedVariant="CurrentVariant" v-on:variant="variantChanged"></productOptionSelect>
 	</div>
 </template>
 
 <script type="text/javascript">
 
 	import Vue from 'vue';
-	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector.vue'
+	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector2.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
 	import store from '@/store'
 	import { mapState, mapActions } from "vuex";
 	const schema = require("schm");
+	import {Slugify, GDatamapper} from '@/gUtilities/main.js'
+import math from 'mathjs';
+	import { mapGetters } from 'vuex'
 
 
+	import isColor from 'is-color';
+	import randomColor from 'randomcolor';
 
 	export default {
 		name: 'Product',
@@ -26,71 +31,76 @@
 			productID: Number,
 			currentproduct:Object,
 			products: Array,
-			variantID:String,
+			variantID:{
+				required:false,
+			},
 			currentvariant:Object,
 		},
 		data() {
 			return {
 				msg: 'Welcome to Your Vue.js App',
-				productDictionary: false;
+				productDictionary: false,
+				selectedVariant: false,
 			}
 		},
 		created: function(){
 			console.log("here",this.$props)
-			const productDictionary = GDatamapper.parseToDictionary(this.products, "id");
+//			const productDictionary = GDatamapper.parseToDictionary(this.products, "id");
 
 
-			var currentProduct = productDictionary.get('1919179161718');
-			console.log("current product", currentProduct);
+		//	var currentProduct = productDictionary.get('1919179161718');
+			//console.log("current product", currentProduct);
 
-			var parsedOptions = parseOptions(currentProduct.options);
-			var optionsDictionary = GDatamapper.parseToDictionary(parsedOptions, "id");
+			//var parsedOptions = this.parseOptions(currentProduct.options);
+			//var optionsDictionary = GDatamapper.parseToDictionary(parsedOptions, "id");
 
-			let parsedVariants = parseVariants(currentProduct.variants, parsedOptions);
-			var variantDictionary= GDatamapper.parseToDictionary(parsedVariants, "id");
-			console.log("FINAL VARIANTS", parsedVariants)
+		//	let parsedVariants = this.parseVariants(currentProduct.variants, parsedOptions);
+			//var variantDictionary= GDatamapper.parseToDictionary(parsedVariants, "id");
+			//console.log("FINAL VARIANTS", parsedVariants)
 
 
-			const PRODUCT_VIEW_SCHEMA = schema(
+			const PRODUCT_SCHEMA = schema(
 				{
 					productID: {type: String, default: this.products[0].id},
-					variantID: {type: Number, default: this.products[0].variants[0].id},
+					variantID: {type: String, default: false},
 					products: {type: Array, required: true},
-
-
 				});
 
-			var payload = PRODUCT_VIEW_SCHEMA.parse(this.$props);
+			let payload = PRODUCT_SCHEMA.parse(this.$props);
 
 
-			/*store.dispatch('SHOPIFY_DATA_INIT', newState).then(function(res){
+			store.dispatch('SHOPIFY_DATA_INIT', payload).then(function(res){
+				if (payload.productID ){
+					store.dispatch('SET_CURRENT_PRODUCT', payload).then(function(res){
+						console.log("DONE" , payload);
 
-			})*/
+						store.dispatch('SET_CURRENT_VARIANT', payload);
+					});
+				}
+			})
 		},
 		mounted: function() {
 
-
 		}, computed: {
-			DATASTORE: function() {
-				return store.getters;
-			},
-			CurrentProduct: {
-				get: function() {
-					return [];//this.$data._currentProduct;
-				},
-				set: function(newValue) {
-					//this.$data._currentProduct = newValue;
-				}
-			}
-
+			...mapGetters([
+				'VariantDictionary',
+				'Variants',
+				'Options',
+				'OptionsDictionary',
+				'CurrentProduct',
+				'CurrentVariant'
+				// ...
+			])
 		},
 
 		methods: {
+
 			variantChanged: function(variant) {
 				console.log(">>>>>>>>>>>.NEW VARIANT", variant)
 
 				if ( variant != undefined){
-					store.commit('CURRENT_VARIANT_CHANGED', variant);
+					//store.commit('CURRENT_VARIANT_CHANGED', variant);
+					//store.dispatch('SET_CURRENT_VARIANT', {selectedVariant:variant });
 
 				}
 			},
