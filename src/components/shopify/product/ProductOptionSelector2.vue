@@ -1,17 +1,19 @@
 <template>
-    <div>
+    <div >
         <h5>SELECTED VARIANT {{selectedVariant.title}} VARIANT ID: {{selectedVariant.id}}</h5>
         <h5>INVENTORY AVAILABLE {{selectedVariant.inventory_quantity}} : PRICE {{selectedVariant.price}}</h5>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="icon"><path fill="#444" d="M18.64 17.02l-5.31-5.31c.81-1.08 1.26-2.43 1.26-3.87C14.5 4.06 11.44 1 7.75 1S1 4.06 1 7.75s3.06 6.75 6.75 6.75c1.44 0 2.79-.45 3.87-1.26l5.31 5.31c.45.45 1.26.54 1.71.09.45-.36.45-1.17 0-1.62zM3.25 7.75c0-2.52 1.98-4.5 4.5-4.5s4.5 1.98 4.5 4.5-1.98 4.5-4.5 4.5-4.5-1.98-4.5-4.5z"/></svg>
 
-        <div v-for="option,index in Options">
-<h5> {{option.name}}</h5>
+        <div class="attribute-panel" v-for="option,index in Options">
+<h3> {{option.name}}</h3>        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="icon"><path fill="#444" d="M18.64 17.02l-5.31-5.31c.81-1.08 1.26-2.43 1.26-3.87C14.5 4.06 11.44 1 7.75 1S1 4.06 1 7.75s3.06 6.75 6.75 6.75c1.44 0 2.79-.45 3.87-1.26l5.31 5.31c.45.45 1.26.54 1.71.09.45-.36.45-1.17 0-1.62zM3.25 7.75c0-2.52 1.98-4.5 4.5-4.5s4.5 1.98 4.5 4.5-1.98 4.5-4.5 4.5-4.5-1.98-4.5-4.5z"/></svg>
+
+
             <multiselect :options="option.values"
                          v-model="selectedOptions[index]"
                          @input="_getVariantFromOptions()"
                          :class="option.slug"
                          :optionid="option.id"
-                         v-on:close=""
+                         v-on:close="selectClosed"
+
                          :key="index"
                          :taggable="false"
                          label="title"
@@ -27,8 +29,8 @@
                 </template>
                 <template slot="option" class="" slot-scope="props">
                     <img class="option__image" :src="props.option.img">
-                    <div class="option__swatch" style=""></div>
-                    <div class="option__desc"><span class="option__title">{{_getIsDisabled(props.option)}} {{ props.option.title }}</span></div>
+                    <div class="option__swatch"  v-bind:style="{ backgroundColor: props.option.color}"  style=""></div>
+                    <div class="option__desc"><span class="option__title">{{props.option.color}}{{_getIsDisabled(props.option)}} {{ props.option.title }}</span></div>
                 </template>
             </multiselect>
         </div>
@@ -55,7 +57,7 @@
         </multiselect>
 
         <pre class="language-json"><code>{{ selectedVariant  }}</code></pre>
-        <button  v-on:created="clickMe">Click CLICK TO DISABLE SOME BUTTONS</button>
+
 
     </div>
 </template>
@@ -113,6 +115,9 @@
 			])
 		},
 		methods: {
+			selectClosed: function() {
+				console.log("select was deactivated");
+			},
 			_getSearchable: function (option){
 				return ( option.slug == "color") ? true : false;
             },
@@ -244,19 +249,39 @@
     // @import "../assets/g-Patternlab/config/";
     //@import "../assets/g-Patternlab-config.json";
     .multiselect__tags{
-        background: green;
+       // background: green;
     }
     .multiselect__content-wrapper{
         display: block;
-        background: yellow;
+       // background: yellow;
     }
     .optionbutton{
-        border: 2px solid red;
+        border: 0px solid red;
     }
 
+    .attribute-panel{
+        background: #eeeeee;padding: 30px;
+        margin-bottom: 20px;
+    }
     .option__swatch{
-        background: yellow; border:1px solid black;
+       // background: yellow;
+        border:1px solid black;
         height: 50px;width: 50px;
+    }
+    code{
+
+    }
+    .multiselect{
+        .option__swatch{
+            display: none;
+
+
+        }
+        &.color{
+            .option__swatch{
+                display: block;
+            }
+        }
     }
 
     $generate-swatch-classes: false!default;

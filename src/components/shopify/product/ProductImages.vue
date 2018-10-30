@@ -3,7 +3,9 @@
 		<swiper :options="swiperOption" ref="mySwiper">
 			<!-- slides -->
 			<swiper-slide v-for="image,index in images" :key="index">
-				<img style="width:200px;height: 200px" :src="image.src" :alt="image.alt">
+				<div class="swiper-zoom-container">
+					<img class="slide-image" :src="image.src" :alt="image.alt">
+				</div>
 			</swiper-slide>
 
 			<!-- Optional controls -->
@@ -77,8 +79,9 @@
 				_currentSlideIndex: 0,
 				_images: undefined,
 				swiperOption: {
-					speed: 4000,
-					spaceBetween: 100,
+					zoom: true,
+					speed: 1000,
+					spaceBetween: 0,
 					navigation: {
 						nextEl: '.swiper-button-next',
 						prevEl: '.swiper-button-prev',
@@ -101,21 +104,38 @@
 	//@import "../assets/g-Patternlab/config/variables";
 	// @import "../assets/g-Patternlab/config/";
 	//@import "../assets/g-Patternlab-config.json";
-	.multiselect__tags{
-		background: green;
+
+
+	.slide-image{
+		height: 100%;
+		width: 100%;
 	}
-	.multiselect__content-wrapper{
-		display: block;
-		background: yellow;
+	.swiper-container {
+		width: 100%;
+		height: auto;
 	}
-	.optionbutton{
-		border: 2px solid red;
+	.swiper-slide {
+		overflow: hidden;
+	}
+		.swiper-slide {
+		/*text-align: center;
+		font-size: 18px;
+		background: #fff;
+		!* Center slide text vertically *!
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		-webkit-align-items: center;
+		align-items: center;*/
 	}
 
-	.option__swatch{
-		background: yellow; border:1px solid black;
-		height: 50px;width: 50px;
-	}
 
 	$generate-swatch-classes: false!default;
 	$generate-type-classes: true!default;

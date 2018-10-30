@@ -1,8 +1,21 @@
 <template>
 	<div >
-		<ProductImages :images="Images" ></ProductImages>
-
-		<productOptionSelect  :variants="Variants"  :selectedVariant="CurrentVariant" v-on:variant="variantChanged"></productOptionSelect>
+		<div class="product-wrapper">
+			<div>
+				<ProductImages :images="Images" ></ProductImages>
+			</div>
+			<div>
+				<div class="current-product">{{CurrentProduct.title}}</div>
+				<div class="quantity-selector">
+					<vue-numeric-input class="quantity-selector__input"  v-model="selectedQuantity" :min="1" :max="QuantityMax" :step="1"></vue-numeric-input>
+					<h6 class="quantity-selector__available">available: {{QuantityMax}}</h6>
+				</div>
+				<button>
+					Add to cart
+				</button>
+				<productOptionSelect  :variants="Variants"  :selectedVariant="CurrentVariant" v-on:variant="variantChanged"></productOptionSelect>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -17,6 +30,7 @@
 	import {Slugify, GDatamapper} from '@/gUtilities/main.js'
 import math from 'mathjs';
 	import { mapGetters } from 'vuex'
+	import VueNumericInput from 'vue-numeric-input';
 
 
 	import isColor from 'is-color';
@@ -25,7 +39,8 @@ import math from 'mathjs';
 	export default {
 		name: 'Product',
 		components: {
-			productOptionSelect, ProductImages
+			productOptionSelect, ProductImages,
+			VueNumericInput
 
 		},   props:{
 			productID: Number,
@@ -36,10 +51,12 @@ import math from 'mathjs';
 			},
 			currentvariant:Object,
 		},
+
 		data() {
 			return {
 				msg: 'Welcome to Your Vue.js App',
 				productDictionary: false,
+				selectedQuantity: 1,
 				selectedVariant: false,
 			}
 		},
@@ -67,6 +84,20 @@ import math from 'mathjs';
 		mounted: function() {
 
 		}, computed: {
+			QuantityMax:function() {
+				//return 22;
+					if (  !this.CurrentVariant ){
+						return 1;
+					}else{
+						if ( this.$data.selectedQuantity > this.CurrentVariant.inventory_quantity ){
+							this.$data.selectedQuantity= this.CurrentVariant.inventory_quantity;
+						}
+						return this.CurrentVariant.inventory_quantity;
+
+					}
+
+
+			},
 			...mapGetters([
 				'VariantDictionary',
 				'Variants',
@@ -105,10 +136,27 @@ import math from 'mathjs';
 	.multiselect__tags {
 		background: green;
 	}
+	.product-wrapper{
+	display: grid;
+		//width: 500px;
+		//grid-template-rows: 25% 100px auto;
 
+		grid-template-columns: 500px 1fr;
+	}
+
+	.quantity-selector{
+		display: flex;
+		align-items: center;
+		height: 100%;
+		&____available{
+			margin-left: 20px;
+		}
+		&__input{
+
+		}
+	}
 	.multiselect__content-wrapper {
 		display: block;
-		background: yellow;
 	}
 
 	.optionbutton {
@@ -116,7 +164,6 @@ import math from 'mathjs';
 	}
 
 	.option__swatch {
-		background: yellow;
 		border: 1px solid black;
 		height: 50px;
 		width: 50px;

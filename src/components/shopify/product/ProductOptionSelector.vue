@@ -23,8 +23,8 @@
             </template>
             <template slot="option" slot-scope="props">
                 <img class="option__image" :src="props.option.img">
-                <div class="option__swatch" style=""></div>
-                <div class="option__desc"><span class="option__title">{{ props.option }}</span></div>
+                <div class="option__swatch" v-bind:style="{ backgroundColor: props.option.color}" style=""></div>
+                <div class="option__desc"><span class="option__title">{{props.option.color}}{{ props.option }}</span></div>
             </template>
         </multiselect>
 
@@ -275,6 +275,20 @@
     }
     .optionbutton{
         border: 2px solid red;
+    }
+
+    .multiselect{
+        .option__swatch{
+            display: none;
+
+
+        }
+        &.color{
+.option__swatch{
+   // display: block;
+
+}
+        }
     }
 
     .option__swatch{
