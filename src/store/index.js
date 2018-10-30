@@ -33,9 +33,10 @@ const 	parseOptions =function (inOptions) {
 			}
 		},
 		validate: () => schema({
-			id: {type: Number, default: Math.round(math.random(11111111111, 999999999999999))},
-			parent_id: {type: Number, default: false},
+			id: {type: String, default: Math.round(math.random(11111111111, 999999999999999))},
+			parent_id: {type: String, default: false},
 			slug: {type: String, required: true},
+			$isDisabled:  {type: Boolean, default: false},
 			title: {type: String},
 			_index: {type: Number, required: true},
 			swatch_image: {type: Number, default: false},
@@ -45,6 +46,7 @@ const 	parseOptions =function (inOptions) {
 	
 	let optionsArray = inOptions;
 	
+	var newArray =[];
 	for (let i = 0; i < optionsArray.length; i++) {
 		var currentObj = optionsArray[i];
 		var OPTIONS_SCHEMA = schema({
@@ -54,7 +56,7 @@ const 	parseOptions =function (inOptions) {
 			slug: {type: String, default: Slugify(currentObj["name"]), required: true},
 			position: {type: Number},
 			_index: {type: Number, default: i, required: true},
-			product_id: {type: Number, required: true, default: false},
+			product_id: {type: String, required: true, default: false},
 			values: {type: Array, default: false}
 		});
 		
@@ -74,8 +76,12 @@ const 	parseOptions =function (inOptions) {
 			currentObj.values[u] = newValueObj;
 		}
 		currentObj.valueDictionary = GDatamapper.parseToDictionary(currentObj.values, "id");
+	//	throw currentObj;
+		newArray.push(currentObj);
 	}
-	return optionsArray.slice(0);
+	//throw newArray;
+	
+	return newArray;//GDatamapper.parseToDictionary(newArray, "id")
 }
 
 const parseVariants=function(inVariants, inOptionsArr) {
@@ -136,6 +142,7 @@ const SHOPIFY = new Vuex.Store({
 const BASESTORE = {
 	state: {
 		_products: [],
+		_imagesDictionary:false,
 		_optionsDictionary: false,
 		_productDictionary:false,
 		_variantsDictionary: false,
@@ -172,6 +179,25 @@ const BASESTORE = {
 		},
 		OptionsDictionary: state => {
 			return state._optionsDictionary;
+		},
+		Options: state => {
+			//return state._optionsDictionary;
+			if ( !state._optionsDictionary ){
+				return [];
+			}else{
+				return Array.from(state._optionsDictionary.values());
+			}
+		},
+		Images: state => {
+			//return state._optionsDictionary;
+			if ( !state._imagesDictionary ){
+				return [];
+			}else{
+				return Array.from(state._imagesDictionary.values());
+			}
+		},
+		ImagesDictionary: state => {
+			return state._imagesDictionary;
 		},
 		CurrentVariantImage: state => {
 			return state._currentVariant;
@@ -239,59 +265,24 @@ const BASESTORE = {
 		},
 		["PARSE_OPTIONS"](state,  payload) {
 			//INIT PRODUCTS
-			var parsedOptions = parseOptions(payload.currentProduct.options);
+			var parsedOptions = parseOptions(payload.currentProduct.options)
 			this.state._optionsDictionary = GDatamapper.parseToDictionary(parsedOptions, "id");
 			this.commit('PARSE_VARIANTS', {currentProduct: this.state._currentProduct, parsedOptions: parsedOptions });
 			
+		},
+		["PARSE_IMAGES"](state,  payload) {
+			this.state._imagesDictionary = GDatamapper.parseToDictionary(payload.currentProduct.images, "id");
 		},
 		["SET_CURRENT_PRODUCT"](state, payload ) {
 			
 			if (payload.productID && this.state._productDictionary.get(payload.productID ) ){
 					this.state._currentProduct =  this.state._productDictionary.get(payload.productID );
+				this.commit('PARSE_IMAGES', {currentProduct: this.state._currentProduct});
 				this.commit('PARSE_OPTIONS', {currentProduct: this.state._currentProduct});
 				
 			}else{
 				throw "PRODUCT ERROR";
 			}
-			
-			/*let product ;
-			let variantID;
-			if (payload.hasOwnProperty('VariantID') ){
-				variantID=payload['VariantID'];
-			}
-			if (payload.hasOwnProperty('product') ){
-				product = payload['product'];
-			}else if (payload.hasOwnProperty('id')){
-				product=payload;
-			}else{
-				throw "ERROR!",payload;
-			}
-			this.state._currentProduct = product;
-			if (this.state._currentProduct){
-				
-				//setting variants
-				if (state._currentProduct.hasOwnProperty('variants')){
-					this.state._variants = state._currentProduct['variants'];
-				}
-				//setting options
-				if (this.state._currentProduct.hasOwnProperty('options')){
-					this.state._options = this.state._currentProduct['options'];
-				}
-				
-				if (variantID){
-					//throw variantID;
-					
-					console.log("TRYING TO SET AN ID" ,variantID);
-					let self = this;
-					this.dispatch('GET_CURRENT_VARIANT_BY_ID', variantID).then((result) => {
-						console.log("VARIANT ID  ID DATA  DATA~!!!", result);
-						
-						self.commit('CURRENT_VARIANT_CHANGED', result)
-					})
-				}
-			
-			}
-			*/
 			console.log("STATE IS!" , this.state)
 		},
 		[SHOPIFY_DATA_COMPLETE](state) {
@@ -354,36 +345,33 @@ const BASESTORE = {
 			
 		},
 		
-			"SET_CURRENT_VARIANT"({commit,state},payload) {
-	if (payload.variantID =="false"){
-		payload.variantID=false;
-	}
+		"SET_CURRENT_VARIANT"({commit, state}, payload) {
+			if (payload.variantID == "false"){
+				payload.variantID = false;
+			}
 			
-				if ( !payload.variantID &&  !payload.selectedVariant ){
+			if (!payload.variantID && !payload.selectedVariant){
 				//set default
-				commit('CURRENT_VARIANT_CHANGED',this.getters.Variants[0]);
-					return ;
-				}
-				
-				//if there is an id
-				if ( payload.variantID && !payload.selectedVariant )	{
-					
-					if ( this.state._variantsDictionary.get(payload.variantID) ){
-						commit('CURRENT_VARIANT_CHANGED',this.state._variantsDictionary.get(payload.variantID));
-						return;
-					}
-				
-				}
-				
-				if ( payload.selectedVariant ){
-				///actual variant selected
-				commit('CURRENT_VARIANT_CHANGED',payload.selectedVariant);
+				commit('CURRENT_VARIANT_CHANGED', this.getters.Variants[0]);
 				return;
 			}
 			
-			
+			//if there is an id
+			if (payload.variantID && !payload.selectedVariant){
 				
-},
+				if (this.state._variantsDictionary.get(payload.variantID)){
+					commit('CURRENT_VARIANT_CHANGED', this.state._variantsDictionary.get(payload.variantID));
+					return;
+				}
+				
+			}
+			
+			if (payload.selectedVariant){
+				///actual variant selected
+				commit('CURRENT_VARIANT_CHANGED', payload.selectedVariant);
+				return;
+			}
+		},
 		"SHOPIFY_DATA_INIT"({commit,state},payload) {
 			
 			const PRODUCT_DATA_SCHEMA = schema(

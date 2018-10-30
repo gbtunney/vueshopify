@@ -1,6 +1,6 @@
 <template>
 	<div >
-		<ProductImages ></ProductImages>
+		<ProductImages :images="Images" ></ProductImages>
 
 		<productOptionSelect  :variants="Variants"  :selectedVariant="CurrentVariant" v-on:variant="variantChanged"></productOptionSelect>
 	</div>
@@ -44,21 +44,6 @@ import math from 'mathjs';
 			}
 		},
 		created: function(){
-			console.log("here",this.$props)
-//			const productDictionary = GDatamapper.parseToDictionary(this.products, "id");
-
-
-		//	var currentProduct = productDictionary.get('1919179161718');
-			//console.log("current product", currentProduct);
-
-			//var parsedOptions = this.parseOptions(currentProduct.options);
-			//var optionsDictionary = GDatamapper.parseToDictionary(parsedOptions, "id");
-
-		//	let parsedVariants = this.parseVariants(currentProduct.variants, parsedOptions);
-			//var variantDictionary= GDatamapper.parseToDictionary(parsedVariants, "id");
-			//console.log("FINAL VARIANTS", parsedVariants)
-
-
 			const PRODUCT_SCHEMA = schema(
 				{
 					productID: {type: String, default: this.products[0].id},
@@ -88,7 +73,8 @@ import math from 'mathjs';
 				'Options',
 				'OptionsDictionary',
 				'CurrentProduct',
-				'CurrentVariant'
+				'CurrentVariant',
+				'Images'
 				// ...
 			])
 		},
@@ -100,7 +86,7 @@ import math from 'mathjs';
 
 				if ( variant != undefined){
 					//store.commit('CURRENT_VARIANT_CHANGED', variant);
-					//store.dispatch('SET_CURRENT_VARIANT', {selectedVariant:variant });
+					store.dispatch('SET_CURRENT_VARIANT', {selectedVariant:variant });
 
 				}
 			},

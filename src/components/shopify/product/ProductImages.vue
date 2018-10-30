@@ -20,6 +20,7 @@
 	import Vue from 'vue';
 	import store from '@/store'
 	import {swiper, swiperSlide} from 'vue-awesome-swiper'
+	import { mapGetters } from 'vuex'
 
 	export default {
 		name: 'ProductImages',
@@ -27,9 +28,15 @@
 			swiper,
 			swiperSlide
 		}, props: {
-			images: Array
+			images: Array,
+			currentImage: {required: false}
 		},
 		methods: {
+			SlideTo: function(image_id) {
+				var currentImage = this.ImagesDictionary.get(image_id.toString());
+				console.log("IMAGES", currentImage);
+				this.swiper.slideTo(currentImage._index, 1000, false)
+			},
 			GetCurrentSlideIndex: function() {
 
 				var index = this.state._currentProduct.images.findIndex(function(image) {
@@ -37,77 +44,29 @@
 						return true;
 					}
 				});
-
 			},
-		}, created: function() {
-
-			let self = this;
-
-			this.$on('Product_Image_Update', function(index) {
-				self.swiper.slideTo(index, 1000, false)
-			})
-			store.subscribe((mutation, state) => {
-				if (mutation.type == "PRODUCT_IMAGE_CHANGED"){
-					//throw mutation.payload.image;
-					self.CurrentImage = mutation.payload.image;
-				}
-			});
-			//this.$data._productImages = this.images;
 		},
-		mounted: function() {
-
-		}, computed: {
+		watch: {
+			CurrentVariant: function(val) {
+				console.log("imagesCURRENTVARIANT", val);
+				this.SlideTo(val.image_id);
+			}
+		},
+		computed: {
 
 			swiper: function() {
 				return this.$refs.mySwiper.swiper;
 			},
 			CurrentImageIndex: function() {
-				let requestedImageID = this.$data._currentImage.id;
-				let self = this;
-				throw requestedImageID;
 
-				var newIndex = this.images.findIndex(function(image) {
-					if (requestedImageID == image.id){
-						return true;
-					}
-				});
-
-				return newIndex;
 			},
-			Images:{
-				get:function() {
-return;
-				},
-					set:function(){
-
-					}
-			},
-			CurrentImage: {
-				get: function() {
-					return this.$data._currentImage;
-				},
-				// setter
-				set: function(newValue) {
-
-					if (!this.$data._currentImage){
-						this.$data._currentImage = newValue;
-
-					} else {
-						console.log("UPDATED", this.$data._currentImage.id, newValue.id);
-
-						var doEmit = false;
-
-						if (this.$data._currentImage.id != newValue.id){
-							doEmit = true;
-						}
-						this.$data._currentImage = newValue;
-
-						if (doEmit){
-							this.$emit("Product_Image_Update", this.CurrentImageIndex);
-						}
-					}
-				}
-			},
+			...mapGetters([
+				'CurrentProduct',
+				'CurrentVariant',
+				'Images',
+				'ImagesDictionary'
+				// ...
+			])
 		},
 		data() {
 
@@ -118,7 +77,6 @@ return;
 				_currentSlideIndex: 0,
 				_images: undefined,
 				swiperOption: {
-
 					speed: 4000,
 					spaceBetween: 100,
 					navigation: {

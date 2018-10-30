@@ -1,9 +1,39 @@
 <template>
     <div>
-        <h5>INVENTORY AVAILABLE {{selectedVariant.inventory_quantity}}</h5>
-        <h5>PRICE {{selectedVariant.price}}</h5>
         <h5>SELECTED VARIANT {{selectedVariant.title}} VARIANT ID: {{selectedVariant.id}}</h5>
+        <h5>INVENTORY AVAILABLE {{selectedVariant.inventory_quantity}} : PRICE {{selectedVariant.price}}</h5>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="icon"><path fill="#444" d="M18.64 17.02l-5.31-5.31c.81-1.08 1.26-2.43 1.26-3.87C14.5 4.06 11.44 1 7.75 1S1 4.06 1 7.75s3.06 6.75 6.75 6.75c1.44 0 2.79-.45 3.87-1.26l5.31 5.31c.45.45 1.26.54 1.71.09.45-.36.45-1.17 0-1.62zM3.25 7.75c0-2.52 1.98-4.5 4.5-4.5s4.5 1.98 4.5 4.5-1.98 4.5-4.5 4.5-4.5-1.98-4.5-4.5z"/></svg>
+
+        <div v-for="option,index in Options">
+<h5> {{option.name}}</h5>
+            <multiselect :options="option.values"
+                         v-model="selectedOptions[index]"
+                         @input="_getVariantFromOptions()"
+                         :class="option.slug"
+                         :optionid="option.id"
+                         v-on:close=""
+                         :key="index"
+                         :taggable="false"
+                         label="title"
+                         ref="optionselect"
+                         :multiple="false"
+                         track-by="title"
+                         :closeOnSelect="false"
+                         :searchable="_getSearchable(option)"
+                         :allow-empty="false">
+
+                <template slot="singleLabel"  slot-scope="props">
+                    <div class="optionbutton" >{{ props.option.title }}</div>
+                </template>
+                <template slot="option" class="" slot-scope="props">
+                    <img class="option__image" :src="props.option.img">
+                    <div class="option__swatch" style=""></div>
+                    <div class="option__desc"><span class="option__title">{{_getIsDisabled(props.option)}} {{ props.option.title }}</span></div>
+                </template>
+            </multiselect>
+        </div>
+
+
 
         <multiselect :options="Variants"
                      v-model="selectedVariant"
@@ -43,20 +73,22 @@
 			 Multiselect
 		}, props: {
 		},
-        mounted:function(){
-	      //  this.SelectedVariant=  this.VariantDictionary.get(this.variantID);
-		},
         watch: {
 	        selectedVariant: function (val) {
+		       // this.$emit("variant", this.$data.selectedVariant);
+                		        this.$emit("variant", this.$data.selectedVariant);
 
-	        	if ( val !=  this.$data.selectedVariant){
-		        this.$emit("variant", this.$data.selectedVariant);
+		        if ( val !=  this.$data.selectedVariant){
+			       // this.$data.selectedVariant=val;
+
                     }
 			},
 	        CurrentVariant: function (val) {
 	        	console.log("CURRENTVARIANT",val);
 		        this.$data.selectedVariant = val;
-		        //this.$emit("variant", this.$data.selectedVariant);
+
+		        //this is the first time thru only.
+		        this._setSelectedOptions();
 	        }
 		},
 		computed: {
@@ -80,10 +112,55 @@
 				// ...
 			])
 		},
-		mounted: function() {
-		},
-
 		methods: {
+			_getSearchable: function (option){
+				return ( option.slug == "color") ? true : false;
+            },
+			_getIsDisabled: function(option) {
+				var inverseMap = new Map(this.OptionsDictionary)  //.delete(option.id);
+				inverseMap.delete(option.parent_id);
+
+				let newFilteredArray = this.Variants;
+				let optionSelf = option;
+
+				newFilteredArray = newFilteredArray.filter(function(variant) {
+
+					var foundArray = [];
+
+					var optionID = optionSelf.parent_id;
+					var optionValueID = optionSelf.id;
+
+					if (optionValueID == variant.options.get(optionID).id){
+						return true;
+					}
+				})
+
+				let self = this;
+				inverseMap.forEach(function(value, key, map) {
+					let currentSelectedOption = self.$data.selectedOptions[value._index];
+					if (currentSelectedOption){
+						newFilteredArray = newFilteredArray.filter(function(variant) {
+
+							var foundArray = [];
+
+							var optionID = currentSelectedOption.parent_id;
+							var optionValueID = currentSelectedOption.id;
+
+							if (optionValueID == variant.options.get(optionID).id){
+								return true;
+							}
+						})
+					}
+				});
+
+				if (newFilteredArray.length < 1){
+					Vue.set(option, '$isDisabled', true);
+				} else {
+					Vue.set(option, '$isDisabled', false);
+				}
+				return;
+
+			},
 			clickMe: function(){
 				console.log("!!VARIANTS",this.Variants);
             },
@@ -91,17 +168,54 @@
 				return `${title} – ${desc}`
 			},
 			_getVariantFromOptions: function() {
+				let self = this;
+				let mySelectedOptions = this.$data.selectedOptions;
+				let newFilteredArray = this.Variants;
 
+				for (let i = 0; i < mySelectedOptions.length; i++) {
 
+					newFilteredArray = newFilteredArray.filter(function(variant) {
+
+						var foundArray = [];
+
+						var optionID = mySelectedOptions[i].parent_id;
+						var optionValueID = mySelectedOptions[i].id;
+
+						if (optionValueID == variant.options.get(optionID).id){
+							return true;
+						}
+					})
+				}
+				var arrayAfterFilter = newFilteredArray;
+				if (arrayAfterFilter.length == 1){
+					console.log(" VARIANT THAT MEET CRITERIA FOUND ", this.$data.selectedOptions)
+					console.log(arrayAfterFilter[0]);
+
+					if (arrayAfterFilter[0] != this.SelectedVariant){
+						this.SelectedVariant = arrayAfterFilter[0];
+
+					}
+				} else if (arrayAfterFilter.length >= 1){
+					console.log(` ${arrayAfterFilter.length}MASTER VARIANT THAT MATCHES `, this.$data.selectedOptions)
+				} else {
+					console.log("NO MASTER VARIANT THAT MATCHES ", this.$data.selectedOptions)
+					this._setSelectedOptions();
+				}
 			},
-			setSelectedOptions: function() {
+			_setSelectedOptions: function() {
 
+				var selectedArr = new Array()
 
+				if (this.$data.selectedVariant){
+					this.$data.selectedOptions = [];
+					for (var i = 0; i < this.Options.length; i++) {
+						this.$data.selectedOptions.push(this.$data.selectedVariant.options.get(this.Options[i].id));
+					}
+				}
 			},
 			variantSelectorChanged: function() {
 				console.log("VUEX ::VARIANT CHANGED!!! ", this.$data.selectedVariant);
-				//this.setSelectedOptions();
-
+				this._setSelectedOptions();
 			}
 		},
 		filters: {
@@ -116,31 +230,10 @@
 				msg: 'Welcome to Your Vue.js App',
 				totalOptions: 3,
 				selectedOptions: [],
-				options: [],
-				totalVariants: 1,
-				_defaultVariantIndex: 8,
-				variants:[],
 				selectedVariant:[],
 			}
 		}
 	}
-
-	Object.defineProperty(Array.prototype, 'unique', {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: function() {
-			var a = this.concat();
-			for(var i=0; i<a.length; ++i) {
-				for(var j=i+1; j<a.length; ++j) {
-					if(a[i] === a[j])
-						a.splice(j--, 1);
-				}
-			}
-
-			return a;
-		}
-	});
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
