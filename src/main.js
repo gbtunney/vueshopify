@@ -4,6 +4,8 @@ import Vue from 'vue'
 //import App from './App'
 import store from './store'
 import data from './data.json';
+import router from './router'
+
 import {Slugify, GDatamapper} from '@/gUtilities/main.js'
 import Product from './components/shopify/product/Product';
 Vue.config.productionTip = false
@@ -27,6 +29,8 @@ const PRODUCT_DATA= document.querySelector(VUE_APP_NAME).dataset;
 		data: {
 			products: productViewData.products
 		},
+		router,
+		
 		store,
 		template: `<Product  :variantID="${PRODUCT_DATA.variantid}" :productID="${PRODUCT_DATA.productid}" :products="products"></Product>`,
 	})
@@ -35,5 +39,3 @@ const PRODUCT_DATA= document.querySelector(VUE_APP_NAME).dataset;
 //initVue(productViewData);
 
 /* eslint-disable no-new */
-
-//initVue(data);
