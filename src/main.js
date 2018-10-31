@@ -10,15 +10,17 @@ Vue.config.productionTip = false
 const schema = require("schm");
 
 const productViewData ={
-	productID: 1919179161718,
 	products: data.products,
-	variantID:18250174988406,
 	currentvariant:false,
 };
 
-function initVue(productViewData){
+const VUE_APP_NAME = '#owool-product-app';
+const PRODUCT_DATA= document.querySelector(VUE_APP_NAME).dataset;
+
+
+//function initVue(productViewData){
 	var vm = new Vue({
-		el: '#productapp',
+		el: VUE_APP_NAME,
 		components: {
 			Product
 		},
@@ -26,11 +28,11 @@ function initVue(productViewData){
 			products: productViewData.products
 		},
 		store,
-		template: `<Product  :variantID="${productViewData.variantID}" :productID="${productViewData.productID}" :products="products"></Product>`,
+		template: `<Product  :variantID="${PRODUCT_DATA.variantid}" :productID="${PRODUCT_DATA.productid}" :products="products"></Product>`,
 	})
-}
+//}
 
-initVue(productViewData);
+//initVue(productViewData);
 
 /* eslint-disable no-new */
 
