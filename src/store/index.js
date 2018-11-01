@@ -62,11 +62,7 @@ const 	parseOptions =function (inOptions) {
 		
 		currentObj = OPTIONS_SCHEMA.parse(currentObj);
 		for (var u = 0; u < currentObj.values.length; u++) {
-			//var newValueObj = GDatamapper.expandToObject(currentObj.values[u],{slug: currentObj.values[u],_index:u, 	parent_id: optionsArray[i].id,gillian : "test"})
-			//var newValueObj = GDatamapper.mapData(currentObj.values[u],GDataMap.adapters.default);
-			//console.log("VALUE :" ,newValueObj);
-			//newValueObj = Object.assign(newValueObj,{_index:u});
-			var newValueObj = GDatamapper.expandToObject(currentObj.values[u], "title", {
+				var newValueObj = GDatamapper.expandToObject(currentObj.values[u], "title", {
 				slug: Slugify(currentObj.values[u]),
 				_index: u,
 				parent_id: optionsArray[i].id,
@@ -112,8 +108,6 @@ const parseVariants=function(inVariants, inOptionsArr) {
 				if (myArr.length != 1){
 					throw "ERROR OPTION NOT FOUND";
 				} else {
-					
-					//console.log("FOUND AN OPTION", myArr[0])
 					newTargetArray.push(myArr[0]);
 				}
 				//console.log("finsihed array",newTargetArray);}
@@ -161,9 +155,6 @@ const BASESTORE = {
 			}else{
 				return Array.from(state._variantsDictionary.values());
 			}
-			//console.log("********VARIANTS" , Array.from(state._variantsDictionary.values()) );
-			//
-		//return [];
 		},
 		ProductDictionary: state =>{
 		return state._productDictionary;
@@ -267,6 +258,9 @@ const BASESTORE = {
 			//INIT PRODUCTS
 			var parsedOptions = parseOptions(payload.currentProduct.options)
 			this.state._optionsDictionary = GDatamapper.parseToDictionary(parsedOptions, "id");
+			
+			console.log("STATE IS!" ,	payload.currentProduct )
+			
 			this.commit('PARSE_VARIANTS', {currentProduct: this.state._currentProduct, parsedOptions: parsedOptions });
 			
 		},
@@ -274,7 +268,6 @@ const BASESTORE = {
 			this.state._imagesDictionary = GDatamapper.parseToDictionary(payload.currentProduct.images, "id");
 		},
 		["SET_CURRENT_PRODUCT"](state, payload ) {
-			
 			if (payload.productID && this.state._productDictionary.get(payload.productID ) ){
 					this.state._currentProduct =  this.state._productDictionary.get(payload.productID );
 				this.commit('PARSE_IMAGES', {currentProduct: this.state._currentProduct});
@@ -283,7 +276,7 @@ const BASESTORE = {
 			}else{
 				throw "PRODUCT ERROR";
 			}
-			console.log("STATE IS!" , this.state)
+		
 		},
 		[SHOPIFY_DATA_COMPLETE](state) {
 			//	console.log('data completed mutation');
@@ -296,7 +289,6 @@ const BASESTORE = {
 			}
 			let variantID = id;
 			var foundVariant = this.state._variants.filter(function(variant) {
-				console.log("found!", variantID, variant.id)
 				
 				if (variant.id == variantID){
 					return true;
@@ -317,7 +309,6 @@ const BASESTORE = {
 			let productID = id;
 			var foundProduct = this.state._products.filter(function(product) {
 				if (product.id == productID){
-					console.log("found!", productID, product.id)
 					return true;
 				}
 			})
@@ -338,11 +329,7 @@ const BASESTORE = {
 			}, 10000)
 		},
 		"SET_CURRENT_PRODUCT"({commit,state},payload) {
-		
-		//	console.log("set current proudct", payload);
-		
 			commit('SET_CURRENT_PRODUCT',payload);
-			
 		},
 		
 		"SET_CURRENT_VARIANT"({commit, state}, payload) {

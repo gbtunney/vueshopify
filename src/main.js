@@ -3,7 +3,7 @@
 import Vue from 'vue'
 //import App from './App'
 import store from './store'
-import data from './data.json';
+//import data from './data.json';
 import router from './router'
 
 import {Slugify, GDatamapper} from '@/gUtilities/main.js'
@@ -11,13 +11,13 @@ import Product from './components/shopify/product/Product';
 Vue.config.productionTip = false
 const schema = require("schm");
 
-const productViewData ={
-	products: data.products,
-	currentvariant:false,
-};
 
 const VUE_APP_NAME = '#owool-product-app';
 const PRODUCT_DATA= document.querySelector(VUE_APP_NAME).dataset;
+
+
+console.log(PRODUCT_DATA.producthandle);
+//SHOPIFY_PRODUCT_DROP = SHOPIFY_PRODUCT_DROP
 
 
 //function initVue(productViewData){
@@ -27,12 +27,10 @@ const PRODUCT_DATA= document.querySelector(VUE_APP_NAME).dataset;
 			Product
 		},
 		data: {
-			products: productViewData.products
+			products: []
 		},
-		router,
-		
 		store,
-		template: `<Product  :variantID="${PRODUCT_DATA.variantid}" :productID="${PRODUCT_DATA.productid}" :products="products"></Product>`,
+		template: `<Product producthandle="${PRODUCT_DATA.producthandle}" :variantID="${PRODUCT_DATA.variantid}" :productID="${PRODUCT_DATA.productid}" :products='products'></Product>`,
 	})
 //}
 

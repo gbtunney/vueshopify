@@ -53,10 +53,10 @@ module.exports = {
     assetsPublicPath: '/',
 
     /**
-     * Source Maps
+     * Source Maps7
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

@@ -2,7 +2,7 @@
 	<div >
 		<div class="product-wrapper">
 			<div>
-				<ProductImages :images="Images" ></ProductImages>
+				<ProductImages :images="Images"></ProductImages>
 			</div>
 			<div>
 				<div class="current-product">{{CurrentProduct.title}}</div>
@@ -27,7 +27,7 @@
 	import store from '@/store'
 	import { mapState, mapActions } from "vuex";
 	const schema = require("schm");
-	import {Slugify, GDatamapper} from '@/gUtilities/main.js'
+	import {Slugify,setQueryStringParameter, GDatamapper} from '@/gUtilities/main.js'
 import math from 'mathjs';
 	import { mapGetters } from 'vuex'
 	import VueNumericInput from 'vue-numeric-input';
@@ -43,9 +43,14 @@ import math from 'mathjs';
 			VueNumericInput
 
 		},   props:{
+			producthandle: {
+				type:String,
+				default:'not set'
+			},
 			productID: Number,
 			currentproduct:Object,
 			products: Array,
+
 			variantID:{
 				required:false,
 			},
@@ -61,24 +66,26 @@ import math from 'mathjs';
 			}
 		},
 		created: function(){
+		//	if ( this.producthandle )
 			const PRODUCT_SCHEMA = schema(
 				{
-					productID: {type: String, default: this.products[0].id},
+					productID: {type: String},
 					variantID: {type: String, default: false},
 					products: {type: Array, required: true},
 				});
 
 			let payload = PRODUCT_SCHEMA.parse(this.$props);
 
-
-			store.dispatch('SHOPIFY_DATA_INIT', payload).then(function(res){
-				if (payload.productID ){
-					store.dispatch('SET_CURRENT_PRODUCT', payload).then(function(res){
-						console.log("DONE" , payload);
-
-						store.dispatch('SET_CURRENT_VARIANT', payload);
-					});
-				}
+			this.getProduct( { params: { id:  this.producthandle } }).then(function(res) {
+				payload  = Object.assign(payload);
+				payload.products = [ res.data.product]
+				store.dispatch('SHOPIFY_DATA_INIT', payload).then(function(res) {
+					if (payload.productID){
+						store.dispatch('SET_CURRENT_PRODUCT', payload).then(function(res) {
+							store.dispatch('SET_CURRENT_VARIANT', payload);
+						});
+					}
+				})
 			})
 		},
 		mounted: function() {
@@ -111,7 +118,10 @@ import math from 'mathjs';
 		},
 
 		methods: {
-
+			...mapActions([
+				'getProduct'
+				// ...
+			]),
 			variantChanged: function(variant) {
 				console.log(">>>>>>>>>>>.NEW VARIANT", variant)
 
@@ -119,6 +129,7 @@ import math from 'mathjs';
 					//store.commit('CURRENT_VARIANT_CHANGED', variant);
 					store.dispatch('SET_CURRENT_VARIANT', {selectedVariant:variant });
 
+					setQueryStringParameter("variant",variant.id);
 				}
 			},
 		}

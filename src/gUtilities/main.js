@@ -15,12 +15,17 @@ export function Slugify(text) {
 	
 }
 
+export function setQueryStringParameter(name, value) {
+	const params = new URLSearchParams(location.search);
+	params.set(name, value);
+	window.history.replaceState({}, "", decodeURIComponent(`${location.pathname}?${params}`));
+}
+
+
 export const GDatamapper = {
 	mapData : function(obj,map,merge =true){
 		let data_map = map;
 		let Obj= Object.assign(obj);
-		
-		console.log("obj" ,Obj);
 		Object.keys(obj).forEach(function(key) {
 			console.log(`key ${ key} ,${data_map.hasOwnProperty(key)}map   ${Obj.hasOwnProperty(key) } obj`);
 			
@@ -47,7 +52,6 @@ export const GDatamapper = {
 	},
 	expandToObject: function(_value ,_newprop=false,_addprops={} ){
 		if( typeof _value == "string" ||  typeof _value == "number"  ){
-			console.log("trying to convert" , _value)
 			if ( _newprop){
 				return	Object.assign({[_newprop.toString()] :_value  }, _addprops);
 			}else{
@@ -59,17 +63,22 @@ export const GDatamapper = {
 	},
 	parseToDictionary : function( _array ,_keyprop,_addprops ={}){
 		var _dictionary = new Map();
+		
 		if ( typeof _array == "object" ){
 			for ( var i = 0 ; i < _array.length; i++){
-				
 				var _currObject = _array[i];
-				if ( typeof _currObject != "object" ){
+				
+				//if ( typeof _currObject != "object" ){
 					///this is when the value
-					throw "its an array need to map";
-				}else{
+					//throw "its an array need to map";
+					
+			//	}else{
 					var _newObject = Object.assign({_index: i }, _currObject);
+					if (_newObject && _currObject[_keyprop] ){
 					_dictionary.set(_currObject[_keyprop].toString(), _newObject);
+					
 				}
+				//}
 				
 			}
 		}else{

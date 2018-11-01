@@ -27,7 +27,7 @@ const SHOPIFY_API = new ShopifyApi({
 		let product_id = params.product_id;
 	state._products = payload.data.products;
 		console.log(`Post with id ${data} successfully fetched.`,state._products);
-		console.log("STATE", params);
+		//console.log("STATE", params);
 	},
 	onError(state, error, axios, { params, data }) {
 		// if you define the onSuccess function you have to set the state by yourself
@@ -37,12 +37,12 @@ const SHOPIFY_API = new ShopifyApi({
 })
 .get({
 	action: "getProduct",
-	property: "product",
-	path: ({ id }) => `/products.json?ids=${id}`,
+	property: "products",
+	path: ({ id }) => `/products/${id}.json`,
 	onSuccess(state, payload, axios, { params, data }) {
 		// if you define the onSuccess function you have to set the state by yourself
-		state.post = payload.data;
-		console.log(`Post with id ${params.id} successfully fetched.`);
+		//state._products =[ payload.data];
+		console.log(`Post with id ${params.id} successfully fetched.`,payload.data);
 	},
 	onError(state, error, axios, { params, data }) {
 		// if you define the onSuccess function you have to set the state by yourself
