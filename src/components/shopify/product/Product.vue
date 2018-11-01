@@ -1,6 +1,8 @@
 <template>
 	<div >
+		<flameicon></flameicon>
 		<div class="product-wrapper">
+
 			<div>
 				<ProductImages :images="Images"></ProductImages>
 			</div>
@@ -32,15 +34,24 @@ import math from 'mathjs';
 	import { mapGetters } from 'vuex'
 	import VueNumericInput from 'vue-numeric-input';
 
+	//import flameIcon from '@/components/icon-flame.svg';
+
+	import flameicon from '@/assets/icons/icon-ornament-1.svg';
+
 
 	import isColor from 'is-color';
 	import randomColor from 'randomcolor';
+
+	//import modules from "@/components/icons/**/*.svg";
+
 
 	export default {
 		name: 'Product',
 		components: {
 			productOptionSelect, ProductImages,
-			VueNumericInput
+			VueNumericInput,
+			flameicon
+
 
 		},   props:{
 			producthandle: {
@@ -63,6 +74,7 @@ import math from 'mathjs';
 				productDictionary: false,
 				selectedQuantity: 1,
 				selectedVariant: false,
+
 			}
 		},
 		created: function(){
@@ -87,6 +99,8 @@ import math from 'mathjs';
 					}
 				})
 			})
+			console.log("icon" ,flameicon);
+
 		},
 		mounted: function() {
 
@@ -118,6 +132,7 @@ import math from 'mathjs';
 		},
 
 		methods: {
+
 			...mapActions([
 				'getProduct'
 				// ...

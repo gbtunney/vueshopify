@@ -75,10 +75,10 @@
 			Selected: function(){
 				return this.$data._buttons.filter(item => item.active);
 			}
-		,
-		SelectedCount: function(){
-			return this.$data._buttons.filter(item => item.active).length;
-		}
+			,
+			SelectedCount: function(){
+				return this.$data._buttons.filter(item => item.active).length;
+			}
 
 		},
 		methods: {
@@ -91,8 +91,8 @@
 			},
 			getIndex: function(guid){
 
-			return this.Buttons.findIndex(button => button.guid == guid);
-	},
+				return this.Buttons.findIndex(button => button.guid == guid);
+			},
 			updateByIndex(index){
 				if ( this.$data._buttons[index] ){
 					Vue.set(this.$data._buttons[index], "disabled", true);
@@ -102,22 +102,22 @@
 			updateSelected: function( newData, key ) {
 
 
-console.log(key);
+				console.log(key);
 
-console.log(this.$data._buttons);
+				console.log(this.$data._buttons);
 
-var oldArray = this.Buttons.slice(0);
+				var oldArray = this.Buttons.slice(0);
 
-oldArray[key] =newData;
-this.Buttons = oldArray;
+				oldArray[key] =newData;
+				this.Buttons = oldArray;
 
 
 
 				//this.$data._buttons.$set(0, newData);
 
-			//	Vue.set(this.$data._buttons, key, newData);
+				//	Vue.set(this.$data._buttons, key, newData);
 
-			//	Vue.set(this.Buttons[2], "disabled", true);
+				//	Vue.set(this.Buttons[2], "disabled", true);
 
 
 				//	this.$emit("changed", this.Selected);
@@ -125,57 +125,57 @@ this.Buttons = oldArray;
 
 				//if (newData.active != this.getItemByGuid(newData.dataObj.guid).active ){
 
-					//console.log("SELECTED COUNT " + this.SelectedCount)
+				//console.log("SELECTED COUNT " + this.SelectedCount)
 				//	var index = this.getIndex( newData.dataObj.guid );
-					//Vue.set(this.$data._buttons[index], "active", true);
-					/*if (!this.mutuallyExclusive){
-						if ( this.isMaxSelected ){
+				//Vue.set(this.$data._buttons[index], "active", true);
+				/*if (!this.mutuallyExclusive){
+					if ( this.isMaxSelected ){
 
-													for ( var i =0; i< this.Buttons.length; i++) {
-														var button = this.Buttons[i];
-														console.log(button);
+												for ( var i =0; i< this.Buttons.length; i++) {
+													var button = this.Buttons[i];
+													console.log(button);
 
-														if (this.isMaxSelected){
-															if (!button.active){
-																//button.disabled = true;
-																Vue.set(button, "disabled", true);
+													if (this.isMaxSelected){
+														if (!button.active){
+															//button.disabled = true;
+															Vue.set(button, "disabled", true);
 
-															} else {
-																//..button.disabled = false;
-																console.log('SETTING MAX ACTIVE AGAIN');
-																Vue.set(button, "disabled", false);
-
-															}
 														} else {
+															//..button.disabled = false;
+															console.log('SETTING MAX ACTIVE AGAIN');
+															Vue.set(button, "disabled", false);
 
-
-															if (!button.active){
-																//button.disabled = false;
-																Vue.set(button, "disabled", false);
-
-
-															} else {
-																//button.disabled = false;
-																Vue.set(button, "disabled", false);
-
-															}
 														}
+													} else {
 
-														this.$data._buttons[i] = button;
 
+														if (!button.active){
+															//button.disabled = false;
+															Vue.set(button, "disabled", false);
+
+
+														} else {
+															//button.disabled = false;
+															Vue.set(button, "disabled", false);
+
+														}
 													}
 
+													this.$data._buttons[i] = button;
 
-							this.$emit("maxSelectionReached", this.Selected);
+												}
 
-						}else{
-							//if ( this.$data._buttons[index] ){
-							for (var i =0; i<this.Buttons.length;i++){
-								Vue.set(this.Buttons[i], "disabled", false);
-							}
 
+						this.$emit("maxSelectionReached", this.Selected);
+
+					}else{
+						//if ( this.$data._buttons[index] ){
+						for (var i =0; i<this.Buttons.length;i++){
+							Vue.set(this.Buttons[i], "disabled", false);
 						}
-					}*/
+
+					}
+				}*/
 
 				//}
 			}
