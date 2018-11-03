@@ -4,8 +4,8 @@
         <h5>INVENTORY AVAILABLE {{selectedVariant.inventory_quantity}} : PRICE {{selectedVariant.price}}</h5>
 
         <div class="attribute-panel" v-for="option,index in Options">
-<h3> {{option.name}}</h3>        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="icon"><path fill="#444" d="M18.64 17.02l-5.31-5.31c.81-1.08 1.26-2.43 1.26-3.87C14.5 4.06 11.44 1 7.75 1S1 4.06 1 7.75s3.06 6.75 6.75 6.75c1.44 0 2.79-.45 3.87-1.26l5.31 5.31c.45.45 1.26.54 1.71.09.45-.36.45-1.17 0-1.62zM3.25 7.75c0-2.52 1.98-4.5 4.5-4.5s4.5 1.98 4.5 4.5-1.98 4.5-4.5 4.5-4.5-1.98-4.5-4.5z"/></svg>
-
+<h3> {{option.name}}</h3>   <div class="testicon"><icon_search></icon_search></div>
+<h3> {{option.name}}</h3>
 
             <multiselect :options="option.values"
                          v-model="selectedOptions[index]"
@@ -68,11 +68,12 @@
 	import Multiselect from 'vue-multiselect'
 	import { mapGetters } from 'vuex'
 	import store from '@/store'
+	import icon_search from '@/assets/icons/icon-search.svg';
 
 	export default {
 		name: 'HelloWorld',
 		components: {
-			 Multiselect
+			 Multiselect,icon_search
 		}, props: {
 		},
         watch: {
@@ -244,13 +245,19 @@
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" type="text/scss"  >
+<style lang="scss" type="text/scss" scoped >
     //@import "../assets/g-Patternlab/config/variables";
     // @import "../assets/g-Patternlab/config/";
     //@import "../assets/g-Patternlab-config.json";
     .multiselect__tags{
        // background: green;
     }
+
+    .testicon svg,path{
+        fill: green;
+    }
+
+
     .multiselect__content-wrapper{
         display: block;
        // background: yellow;

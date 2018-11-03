@@ -36,7 +36,7 @@ import math from 'mathjs';
 
 	//import flameIcon from '@/components/icon-flame.svg';
 
-	import flameicon from '@/assets/icons/icon-ornament-1.svg';
+	import flameicon from '@/assets/icons/icon-dragon.svg';
 
 
 	import isColor from 'is-color';
@@ -51,8 +51,6 @@ import math from 'mathjs';
 			productOptionSelect, ProductImages,
 			VueNumericInput,
 			flameicon
-
-
 		},   props:{
 			producthandle: {
 				type:String,
@@ -79,6 +77,8 @@ import math from 'mathjs';
 		},
 		created: function(){
 		//	if ( this.producthandle )
+			console.log("icon" ,flameicon);
+
 			const PRODUCT_SCHEMA = schema(
 				{
 					productID: {type: String},
@@ -99,7 +99,6 @@ import math from 'mathjs';
 					}
 				})
 			})
-			console.log("icon" ,flameicon);
 
 		},
 		mounted: function() {
