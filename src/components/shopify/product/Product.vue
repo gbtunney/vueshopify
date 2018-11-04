@@ -1,5 +1,6 @@
 <template>
 	<div >
+		<CSSToggler></CSSToggler>
 		<flameicon></flameicon>
 		<div class="product-wrapper">
 
@@ -26,6 +27,8 @@
 	import Vue from 'vue';
 	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector2.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
+	import CSSToggler from '@/components/utilities/gCSSToggler.vue'
+
 	import store from '@/store'
 	import { mapState, mapActions } from "vuex";
 	const schema = require("schm");
@@ -50,7 +53,8 @@ import math from 'mathjs';
 		components: {
 			productOptionSelect, ProductImages,
 			VueNumericInput,
-			flameicon
+			flameicon,
+			CSSToggler
 		},   props:{
 			producthandle: {
 				type:String,
@@ -150,6 +154,7 @@ import math from 'mathjs';
 	}
 
 </script>
+<style src="@/assets/patternlabstyles.css"></style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 
