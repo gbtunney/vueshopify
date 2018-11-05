@@ -21,6 +21,20 @@ export function setQueryStringParameter(name, value) {
 	window.history.replaceState({}, "", decodeURIComponent(`${location.pathname}?${params}`));
 }
 
+export function filterArrayByValue(_array,_value, _prop=false){
+	if ( !_array || !_value  || _array.lengt <= 0 ) return;
+	
+	let prop = _prop , value =_value;
+	return _array.filter(function(item){
+	
+		if (item.hasOwnProperty(prop) && item[prop] == value ) return true;
+		return;
+	})
+	
+	return;
+
+}
+
 
 export const GDatamapper = {
 	mapData : function(obj,map,merge =true){

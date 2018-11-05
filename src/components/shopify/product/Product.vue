@@ -1,7 +1,12 @@
 <template>
 	<div >
-		<CSSToggler></CSSToggler>
-		<flameicon></flameicon>
+		<h2 id="testButton">TEST BUTTON!</h2>
+		<CSSToggler targetEl="#testButton"></CSSToggler>
+
+		<CSSToggler targetEl="#testIcon"></CSSToggler>
+	<div id="testIcon">
+		<flameicon ></flameicon>
+	</div>
 		<div class="product-wrapper">
 
 			<div>
@@ -28,7 +33,7 @@
 	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector2.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
 	import CSSToggler from '@/components/utilities/gCSSToggler.vue'
-
+	import multiselectList from '@/components/utilities/gMultiselectList.vue'
 	import store from '@/store'
 	import { mapState, mapActions } from "vuex";
 	const schema = require("schm");

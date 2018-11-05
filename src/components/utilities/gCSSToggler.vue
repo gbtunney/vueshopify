@@ -1,7 +1,11 @@
 <template>
 	<div>
+		THE list
+<multiselectList  v-model="scfilters[0].value"
+                  :options="scfilters[0].options">
 
-		<h5>CSS TOGGLER</h5>
+</multiselectList>
+		<h5 id="testelement">CSS TOGGLER</h5>
 
 		<h5>Filter Panel</h5>
 
@@ -28,10 +32,10 @@
 			track-by="selector"
 		             :options="options"
 		             v-model="value"
-		             @input=""
+		             @input="_updateStyle"
 		             :taggable="false"
 		             ref="optionselect"
-		             :multiple="false"
+		             :multiple="true"
 		             :searchable="true"
 			:internal-search="false"
 			:clearOnSelect=true
@@ -50,7 +54,13 @@
 <script>
 
 	import multiselect from 'vue-multiselect'
+	import multiselectList from '@/components/utilities/gMultiselectList.vue'
+
 	import Fuse from 'fuse.js';
+
+	import {filterArrayByValue} from '@/gUtilities/main.js';
+
+
 
 	import css_data from '@/assets/css-selectors.json';
 	import Vue from 'vue';
@@ -106,15 +116,16 @@ const FUSE_FILTER_MODE_OR =  {
 
 			}
 		},
-		components: {multiselect},
+		components: {multiselect,multiselectList},
 		props: {
-			exampleprop: {
-				type: String,
-				default: 'not set',
+			targetEl: {
+				type: String, Boolean,
+				default: false,
 				required: false
 			},
 		},
 		created:function(){
+			console.log("hello");
 			this.$data.baseoptions = Array.from(css_data.simpleSelectors.classes, function(selector){
 				 return {$isDisabled :false,
 					 $isSelected : false,
@@ -133,11 +144,27 @@ const FUSE_FILTER_MODE_OR =  {
 			//	throw fuse.search('san  serif lg')
 		},
 		mounted:function(){
-			console.log("RED",		this.$refs.filterPanel);
 			this.$refs.filterPanel.isOpen=true;
+		//	console.log("RED",		filterArrayByValue(this.$data.scfilters[0].options,selected));
+
+
+
+			this._updateStyle();
 		},
 		methods: {
 
+			_updateStyle:function(){
+
+				console.log("HIHIHI",this.TokenClassList)
+				if ( this.targetEl && this.TokenClassList)
+				{
+					document.querySelectorAll(this.targetEl).forEach(el => {
+						el.className="";
+						el.classList.add(...this.TokenClassList);
+					});
+				}
+
+			},
 			fuseFindPreset () {
 
 				if ( this.filterStr() ){
@@ -222,6 +249,23 @@ const FUSE_FILTER_MODE_OR =  {
 		},
 		computed: {
 			PresetFilteredOptions:function() {
+
+			},
+			TokenClassList:function(){
+				if ( this.$data.value ){
+					//return Array.from( );
+
+					return Array.from( this.$data.value, function(selectorObj){
+
+						if ( selectorObj.selector ){
+							return  selectorObj.selector;
+						}else{
+							return false;
+						}
+
+					} );
+						}
+
 
 			},
 			Options: {
