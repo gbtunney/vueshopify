@@ -166,6 +166,10 @@ import math from 'mathjs';
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/scss">
 @import "~@/assets/g-Patternlab/modules/colors/colors";
+@import "~@/assets/g-Patternlab/utilities/_g-functions.scss";
+
+@import "~@/assets/g-Patternlab/modules/typography/_typography.scss";
+
 @import "~@/assets/g-Patternlab/modules/generator/generator";
 
 //@import "~@/../node_modules/modularscale-sass/stylesheets/modular-scale";

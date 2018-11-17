@@ -36,7 +36,8 @@
 		             :allow-empty="true">
 		</multiselect>
 
-		<div>{{cssClassesString}}
+		<div><textarea rows="4" cols="50">
+			{{cssClassesString}}</textarea>
 		</div>
 	</div>
 </template>
@@ -49,10 +50,8 @@
 	import Fuse from 'fuse.js';
 
 	import {filterArrayByValue} from '@/gUtilities/main.js';
+	import css_data from '@/assets/pattern-lab-style-audit.json';
 
-
-
-	import css_data from '@/assets/css-selectors.json';
 	import Vue from 'vue';
 
 const FUSE_FILTER_MODE_OR =  {

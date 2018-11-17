@@ -1,4 +1,6 @@
-
-@debug 'HELLO EVERYOjjjjjNE!';
+//$generate-type-classes: false;
 @import "g-Patternlab/modules/colors/colors";
+@import "g-Patternlab/utilities/_g-functions.scss";
+@import "g-Patternlab/modules/typography/typography";
 @import "g-Patternlab/modules/generator/generator";
+

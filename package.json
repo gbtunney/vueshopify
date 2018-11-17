@@ -10,8 +10,10 @@
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
     "make-sprites": "svg-sprite-generate -d src/assets/icons/ -o src/assets/spriteicons.svg",
-    "audit": "list-selectors src/assets/pattern-lab-style-audit.css > src/assets/pattern-lab-style-audit.json -pretty",
-    "style-dump": "node-sass -r  --watch -rw src/assets/pattern-lab-style-audit.scss src/assets/pattern-lab-style-audit.css"
+    "audit-dump": "list-selectors src/assets/pattern-lab-style-audit.css > src/assets/pattern-lab-style-audit.json -pretty",
+    "style-dump": "node-sass src/assets/pattern-lab-style-audit.scss src/assets/pattern-lab-style-audit.css",
+    "audit": "npm run style-dump && npm run audit-dump ",
+    "styles": "node-sass -r --watch -rw  src/assets/pattern-lab-style-audit.scss src/assets/pattern-lab-style-audit.css"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -37,6 +39,7 @@
     "breakpoint-slicer": "^2.0.0",
     "chalk": "^2.0.1",
     "chroma-sass": "^1.2.6",
+    "compass-mixins": "^0.12.10",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
     "eslint": "^4.15.0",
@@ -73,7 +76,9 @@
     "randomcolor": "^0.5.3",
     "rimraf": "^2.6.0",
     "sass-bem-constructor": "^1.1.0",
+    "sass-dry": "^1.0.0",
     "sass-loader": "^7.1.0",
+    "sass-toolkit": "^2.10.2",
     "schm": "^0.4.1",
     "schm-translate": "^0.4.1",
     "semver": "^5.3.0",
