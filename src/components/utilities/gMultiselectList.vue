@@ -2,8 +2,7 @@
 	<div
 		class="multiselect__content-wrapper multiselectlist"
 		:class="DisplayMode"
-		v-show="isOpen"
-		@focus="activate"
+
 		tabindex="-1"
 		@mousedown.prevent
 		:style="{ maxHeight: optimizedHeight + 'px' }"
@@ -27,7 +26,7 @@
 	                :data-deselect="deselectLabelText"
 	                class="multiselect__option">
                     <slot name="option" :option="option" :search="search">
-                      hii<span>{{ getOptionLabel(option) }}</span>
+                      <span>{{ getOptionLabel(option) }}</span>
                     </slot>
                 </span>
 					<span
@@ -283,14 +282,16 @@
 		},
 	created:function(){
 
-		this.isOpen=true;
+		this.$data.isOpen=true;
 	},
 		mounted:function(){
-			this.showPointer=false;
+
+		//	this.activate();
 		},
 		updated:function(){
-			console.log("updatedACTIVATING!!");
-			this.isOpen=true;
+			//console.log("updatedACTIVATING!!");
+			//this.isOpen=true;
+			//this.showPointer=false;
 		}
 	}
 </script>
@@ -359,7 +360,7 @@
 	}
 
 	.multiselect {
-		border:2px solid red;
+		border:1px solid grey;
 		box-sizing: content-box;
 		display: block;
 		position: relative;
@@ -383,7 +384,7 @@
 	}
 
 	.multiselect--active {
-		z-index: 50;
+		z-index: 0;
 	}
 
 	.multiselect--active:not(.multiselect--above) .multiselect__current,
@@ -565,7 +566,7 @@
 	}
 
 	.multiselect__content-wrapper {
-		position: absolute;
+		position: relative;
 		display: block;
 		background: #fff;
 		width: 100%;
@@ -575,24 +576,25 @@
 		border-top: none;
 		border-bottom-left-radius: 5px;
 		border-bottom-right-radius: 5px;
-		z-index: 50;
+		z-index: 0;
 		-webkit-overflow-scrolling: touch;
 		border: 2px solid red;
 
 	}
 	.multiselectlist--horizontal{
-		width: auto;
+		width: fit-content;
 		.multiselect__content{
 			display: flex;
+			justify-content: space-between;
 		}
 	}
 
 	.multiselect__content {
 		list-style: none;
-		display: inline-block;
+	//	display: inline-block;
 		padding: 0;
 		margin: 0;
-		min-width: 100%;
+		//min-width: 100%;
 		vertical-align: top;
 	}
 

@@ -165,7 +165,13 @@ import math from 'mathjs';
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/scss">
-	//@import "../assets/g-Patternlab/config/variables";
+@import "~@/assets/g-Patternlab/modules/colors/colors";
+@import "~@/assets/g-Patternlab/modules/generator/generator";
+
+//@import "~@/../node_modules/modularscale-sass/stylesheets/modular-scale";
+
+	//@import "/g-Patternlab/config/variables";
+	//@import "/g-Patternlab/config/colors";
 	// @import "../assets/g-Patternlab/config/";
 	//@import "../assets/g-Patternlab-config.json";
 	.multiselect__tags {

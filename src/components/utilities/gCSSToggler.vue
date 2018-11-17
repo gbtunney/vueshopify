@@ -1,27 +1,17 @@
 <template>
-	<div>
+	<div class="gCSSToggler">
 		THE list
-<multiselectList  v-model="scfilters[0].value"
-                  :options="scfilters[0].options">
 
-</multiselectList>
+
 		<h5 id="testelement">CSS TOGGLER</h5>
-
 		<h5>Filter Panel</h5>
+		<multiselectList :showPointer=false ref="filterPanel"  v-model="scfilters[0].value"
+		                 @input="filterChange"
+		                 :searchable="false"
+		                 :multiple="true"
+		                 :options="scfilters[0].options">
 
-			<multiselect @input="fuseFindPreset"
-			           class="panelOpen"  ref="filterPanel"
-			             v-model="scfilters[0].value"
-			             :options="scfilters[0].options"
-			             :multiple="true"
-			             :close-on-select="false"
-			             :clear-on-select="false"
-		placeholder="Pick some"
-		                 :preselect-first="false"
-		                 :searchable=false>
-				<template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-			</multiselect>
-
+		</multiselectList>
 		<button @click="groupSelect(true)">select all</button><button @click="groupSelect(false)">select</button>
 		<button @click="clearSearch()">Clear SEARCH x</button><multiselect
 			:close-on-select="false"
@@ -145,14 +135,13 @@ const FUSE_FILTER_MODE_OR =  {
 		},
 		mounted:function(){
 			this.$refs.filterPanel.isOpen=true;
-		//	console.log("RED",		filterArrayByValue(this.$data.scfilters[0].options,selected));
-
-
-
 			this._updateStyle();
 		},
 		methods: {
-
+			filterChange:function() {
+				console.log("FILTER CHANGEDQ" ,this.$data.scfilters, this.filterStr());
+				this.fuseFind(this.SearchQuery);
+			},
 			_updateStyle:function(){
 
 				console.log("HIHIHI",this.TokenClassList)
@@ -196,6 +185,7 @@ const FUSE_FILTER_MODE_OR =  {
 
 				if ( SEARCH_FILTER_MODE == "AND"){
 					//use only options that match filters.
+					//throw "DOING FILREE", this.filterStr();
 					currentOptions= 	( this.filterStr() ) ? this._fuseSearch(this.filterStr(),currentOptions,FUSE_FILTER_MODE_OR)  : currentOptions;
 				}else if (SEARCH_FILTER_MODE == "OR"){
 					///do something??
@@ -210,7 +200,11 @@ const FUSE_FILTER_MODE_OR =  {
 						console.log("SEARCHING total slectors" , currentOptions.length, 'query ',query,"results ", searchResults.length );
 					}
 				}else{
+console.log('NO QUERY', currentOptions.length);
+					if (currentOptions && currentOptions.length>1 ){
 
+						this.$data.options = currentOptions;
+					}
 				}
 			},
 		groupDisable:function (bool){
@@ -240,7 +234,7 @@ const FUSE_FILTER_MODE_OR =  {
 
 				let str="" ;
 				this.$data.scfilters.forEach(function(scfilter){
-					if (scfilter.value){
+					if (scfilter.value &&  scfilter.value.join ){
 						str += scfilter.value.join(" ");
 					}
 				})
@@ -248,6 +242,9 @@ const FUSE_FILTER_MODE_OR =  {
 			}
 		},
 		computed: {
+			SearchQuery:function(){
+				return this.$refs.optionselect.search;
+			},
 			PresetFilteredOptions:function() {
 
 			},
@@ -298,6 +295,11 @@ const FUSE_FILTER_MODE_OR =  {
 
 
 		<style lang="scss" type="text/scss">
+
+			.gCSSToggler{
+				background: blue;
+				margin: 10px;
+			}
 
 			.panelOpen{
 background: red;

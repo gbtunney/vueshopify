@@ -3,6 +3,7 @@ const path = require('path')
 const config = require('../config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
+var jsonImporter = require('node-sass-json-importer');
 
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
@@ -59,8 +60,12 @@ exports.cssLoaders = function (options) {
     css: generateLoaders(),
     postcss: generateLoaders(),
     less: generateLoaders('less'),
-    sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass'),
+    sass: generateLoaders('sass', {
+	    indentedSyntax: true,
+    }),
+    scss: generateLoaders('sass',{
+	    data: `$testvar: "i am a test";`
+    }),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }
