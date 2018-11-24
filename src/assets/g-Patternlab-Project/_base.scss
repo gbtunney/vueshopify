@@ -16,7 +16,7 @@ $generate-map: (
 
 );
 
-//@include test-all-dependencies();
+@include test-all-dependencies();
 @include init-color-module;
 
 ///todo: do some kind of check to make sure it is initialized bef

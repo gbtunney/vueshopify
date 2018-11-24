@@ -479,7 +479,7 @@
 		border-bottom-right-radius: 5px;
 		z-index: 0;
 		-webkit-overflow-scrolling: touch;
-		border: 2px solid red;
+
 
 	}
 	.multiselectlist--horizontal{
@@ -529,15 +529,7 @@
 		cursor: pointer;
 		white-space: nowrap;
 
-
-		//@include setType(2,font-san-serif);
-
-
-
-		//@include g-simple-component(dark-accent-secondary,font-san-serif,3);
-
-		//@include c-button(dark)
-
+		@include g-simple-component(accent-secondary,font-san-serif,1);
 	}
 
 	.multiselect__option:after {
