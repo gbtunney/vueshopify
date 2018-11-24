@@ -297,7 +297,17 @@
 </script>
 
 <style lang="scss" type="text/scss" scoped>
+	@import "~@/assets/g-Patternlab-Project/_base.scss";
 
+	@import "~@/assets/g-Patternlab/components/simple-component";
+
+
+	%quick-button{
+		//needs to include color, type, padding
+		//@include g-color-scheme(dark);
+		//@include setType(2, font-san-serif, 0);
+		///@include rhythm-padding(1,2);
+	}
 	fieldset[disabled] .multiselect {
 		pointer-events: none;
 	}
@@ -354,8 +364,8 @@
 	.multiselect,
 	.multiselect__input,
 	.multiselect__single {
-		font-family: inherit;
-		font-size: 16px;
+
+		//font-family: inherit;
 		touch-action: manipulation;
 	}
 
@@ -398,116 +408,6 @@
 		transform: rotateZ(180deg);
 	}
 
-	.multiselect--above.multiselect--active .multiselect__current,
-	.multiselect--above.multiselect--active .multiselect__input,
-	.multiselect--above.multiselect--active .multiselect__tags {
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-	}
-
-	.multiselect__input,
-	.multiselect__single {
-		position: relative;
-		display: inline-block;
-		min-height: 20px;
-		line-height: 20px;
-		border: none;
-		border-radius: 5px;
-		background: #fff;
-		padding: 0 0 0 5px;
-		width: calc(100%);
-		transition: border 0.1s ease;
-		box-sizing: border-box;
-		margin-bottom: 8px;
-		vertical-align: top;
-	}
-
-	.multiselect__input::placeholder {
-		color: #35495e;
-	}
-
-	.multiselect__tag ~ .multiselect__input,
-	.multiselect__tag ~ .multiselect__single {
-		width: auto;
-	}
-
-	.multiselect__input:hover,
-	.multiselect__single:hover {
-		border-color: #cfcfcf;
-	}
-
-	.multiselect__input:focus,
-	.multiselect__single:focus {
-		border-color: #a8a8a8;
-		outline: none;
-	}
-
-	.multiselect__single {
-		padding-left: 5px;
-		margin-bottom: 8px;
-	}
-
-	.multiselect__tags-wrap {
-		display: inline;
-	}
-
-	.multiselect__tags {
-		min-height: 40px;
-		display: block;
-		padding: 8px 40px 0 8px;
-		border-radius: 5px;
-		border: 1px solid #e8e8e8;
-		background: #fff;
-		font-size: 14px;
-	}
-
-	.multiselect__tag {
-		position: relative;
-		display: inline-block;
-		padding: 4px 26px 4px 10px;
-		border-radius: 5px;
-		margin-right: 10px;
-		color: #fff;
-		line-height: 1;
-		background: #41b883;
-		margin-bottom: 5px;
-		white-space: nowrap;
-		overflow: hidden;
-		max-width: 100%;
-		text-overflow: ellipsis;
-	}
-
-	.multiselect__tag-icon {
-		cursor: pointer;
-		margin-left: 7px;
-		position: absolute;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		font-weight: 700;
-		font-style: initial;
-		width: 22px;
-		text-align: center;
-		line-height: 22px;
-		transition: all 0.2s ease;
-		border-radius: 5px;
-	}
-
-	.multiselect__tag-icon:after {
-		content: "×";
-		color: #266d4d;
-		font-size: 14px;
-	}
-
-	.multiselect__tag-icon:focus,
-	.multiselect__tag-icon:hover {
-		background: #369a6e;
-	}
-
-	.multiselect__tag-icon:focus:after,
-	.multiselect__tag-icon:hover:after {
-		color: white;
-	}
 
 	.multiselect__current {
 		line-height: 16px;
@@ -523,6 +423,7 @@
 		border-radius: 5px;
 		border: 1px solid #e8e8e8;
 		cursor: pointer;
+
 	}
 
 	.multiselect__select {
@@ -618,15 +519,25 @@
 
 	.multiselect__option {
 		display: block;
-		padding: 12px;
-		min-height: 40px;
-		line-height: 16px;
-		text-decoration: none;
-		text-transform: none;
-		vertical-align: middle;
+		//padding: 12px;
+		//min-height: 40px;
+		//line-height: 16px;
+		//text-decoration: none;
+		//text-transform: none;
+	//	vertical-align: middle;
 		position: relative;
 		cursor: pointer;
 		white-space: nowrap;
+
+
+		//@include setType(2,font-san-serif);
+
+
+
+		//@include g-simple-component(dark-accent-secondary,font-san-serif,3);
+
+		//@include c-button(dark)
+
 	}
 
 	.multiselect__option:after {
@@ -653,9 +564,10 @@
 	}
 
 	.multiselect__option--selected {
-		background: #f3f3f3;
-		color: #35495e;
-		font-weight: bold;
+
+
+		//@include c-button(dark-accent-default);
+
 	}
 
 	.multiselect__option--selected:after {

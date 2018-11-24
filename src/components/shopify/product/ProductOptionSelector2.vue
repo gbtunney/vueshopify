@@ -241,7 +241,6 @@
 		}
 	}
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -289,6 +288,11 @@
                 display: block;
             }
         }
+    }
+
+    //real
+    .multiselect__tag{
+background: red;
     }
 
     $generate-swatch-classes: false!default;

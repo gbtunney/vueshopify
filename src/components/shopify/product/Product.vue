@@ -165,12 +165,7 @@ import math from 'mathjs';
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/scss">
-@import "~@/assets/g-Patternlab/modules/colors/colors";
-@import "~@/assets/g-Patternlab/utilities/_g-functions.scss";
 
-@import "~@/assets/g-Patternlab/modules/typography/_typography.scss";
-
-@import "~@/assets/g-Patternlab/modules/generator/generator";
 
 //@import "~@/../node_modules/modularscale-sass/stylesheets/modular-scale";
 
@@ -214,10 +209,5 @@ import math from 'mathjs';
 		width: 50px;
 	}
 
-	$generate-swatch-classes: false !default;
-	$generate-type-classes: true !default;
-	$generate-scheme-classes: true !default;
-	$generate-utility-padding: true !default;
-	$generate-utility-static: true !default;
-	$generate-components: FALSE !default;
+
 </style>

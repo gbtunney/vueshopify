@@ -64,6 +64,7 @@ exports.cssLoaders = function (options) {
 	    indentedSyntax: true,
     }),
     scss: generateLoaders('sass',{
+	    includePaths: ["node_modules"],
 	    data: `$testvar: "i am a test";`
     }),
     stylus: generateLoaders('stylus'),

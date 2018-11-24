@@ -50,7 +50,9 @@
 	import Fuse from 'fuse.js';
 
 	import {filterArrayByValue} from '@/gUtilities/main.js';
-	import css_data from '@/assets/pattern-lab-style-audit.json';
+
+	//import css_data from '@/assets/pattern-lab-style-audit.json';
+	import css_data from '@/assets/tachyons-style-audit.json';
 
 	import Vue from 'vue';
 
@@ -289,8 +291,9 @@ console.log('NO QUERY', currentOptions.length);
 		}
 	}
 </script>
-
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style src="tachyons/css/tachyons.min.css"></style>
 
 
 		<style lang="scss" type="text/scss">
