@@ -24,59 +24,42 @@
 	import Vue from 'vue';
 	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector2.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
-	import multiselectList from '@/components/utilities/gMultiselectList.vue'
 	import store from '@/store'
-	import { mapState, mapActions } from "vuex";
+	import {mapState, mapActions} from "vuex";
+
 	const schema = require("schm");
-	import {Slugify,setQueryStringParameter, GDatamapper} from '@/gUtilities/main.js'
-import math from 'mathjs';
-	import { mapGetters } from 'vuex'
+	import {Slugify, setQueryStringParameter, GDatamapper} from '@/gUtilities/main.js'
+	import {mapGetters} from 'vuex'
 	import VueNumericInput from 'vue-numeric-input';
-
-	//import flameIcon from '@/components/icon-flame.svg';
-
-	import flameicon from '@/assets/icons/icon-dragon.svg';
-
-
-	import isColor from 'is-color';
-	import randomColor from 'randomcolor';
-
-	//import modules from "@/components/icons/**/*.svg";
-
 
 	export default {
 		name: 'Product',
 		components: {
-			productOptionSelect, ProductImages,
+			productOptionSelect,
+			ProductImages,
 			VueNumericInput
-		},   props:{
+		}, props: {
 			producthandle: {
-				type:String,
-				default:'not set'
+				type: String,
+				default: 'not set'
 			},
 			productID: Number,
-			currentproduct:Object,
+			currentproduct: Object,
 			products: Array,
-
-			variantID:{
-				required:false,
+			variantID: {
+				required: false,
 			},
-			currentvariant:Object,
+			currentvariant: Object,
 		},
 
 		data() {
 			return {
-				msg: 'Welcome to Your Vue.js App',
 				productDictionary: false,
 				selectedQuantity: 1,
 				selectedVariant: false,
-
 			}
 		},
-		created: function(){
-		//	if ( this.producthandle )
-			console.log("icon" ,flameicon);
-
+		created: function() {
 			const PRODUCT_SCHEMA = schema(
 				{
 					productID: {type: String},
@@ -86,9 +69,9 @@ import math from 'mathjs';
 
 			let payload = PRODUCT_SCHEMA.parse(this.$props);
 
-			this.getProduct( { params: { id:  this.producthandle } }).then(function(res) {
-				payload  = Object.assign(payload);
-				payload.products = [ res.data.product]
+			this.getProduct({params: {id: this.producthandle}}).then(function(res) {
+				payload = Object.assign(payload);
+				payload.products = [res.data.product]
 				store.dispatch('SHOPIFY_DATA_INIT', payload).then(function(res) {
 					if (payload.productID){
 						store.dispatch('SET_CURRENT_PRODUCT', payload).then(function(res) {
@@ -102,19 +85,16 @@ import math from 'mathjs';
 		mounted: function() {
 
 		}, computed: {
-			QuantityMax:function() {
+			QuantityMax: function() {
 				//return 22;
-					if (  !this.CurrentVariant ){
-						return 1;
-					}else{
-						if ( this.$data.selectedQuantity > this.CurrentVariant.inventory_quantity ){
-							this.$data.selectedQuantity= this.CurrentVariant.inventory_quantity;
-						}
-						return this.CurrentVariant.inventory_quantity;
-
+				if (!this.CurrentVariant){
+					return 1;
+				} else {
+					if (this.$data.selectedQuantity > this.CurrentVariant.inventory_quantity){
+						this.$data.selectedQuantity = this.CurrentVariant.inventory_quantity;
 					}
-
-
+					return this.CurrentVariant.inventory_quantity;
+				}
 			},
 			...mapGetters([
 				'VariantDictionary',
@@ -137,53 +117,42 @@ import math from 'mathjs';
 			variantChanged: function(variant) {
 				console.log(">>>>>>>>>>>.NEW VARIANT", variant)
 
-				if ( variant != undefined){
-					//store.commit('CURRENT_VARIANT_CHANGED', variant);
-					store.dispatch('SET_CURRENT_VARIANT', {selectedVariant:variant });
-
-					setQueryStringParameter("variant",variant.id);
+				if (variant != undefined){
+					store.dispatch('SET_CURRENT_VARIANT', {selectedVariant: variant});
+					setQueryStringParameter("variant", variant.id);
 				}
 			},
 		}
 	}
 
 </script>
-<style src="@/assets/patternlabstyles.css"></style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/scss">
 
-
-//@import "~@/../node_modules/modularscale-sass/stylesheets/modular-scale";
-
-	//@import "/g-Patternlab/config/variables";
-	//@import "/g-Patternlab/config/colors";
-	// @import "../assets/g-Patternlab/config/";
 	//@import "../assets/g-Patternlab-config.json";
 	.multiselect__tags {
 		background: green;
 	}
-	.product-wrapper{
-	display: grid;
-		//width: 500px;
-		//grid-template-rows: 25% 100px auto;
 
+	.product-wrapper {
+		display: grid;
 		grid-template-columns: 500px 1fr;
 	}
 
-	.quantity-selector{
+	.quantity-selector {
 		display: flex;
 		align-items: center;
 		height: 100%;
-		&____available{
+		&____available {
 			margin-left: 20px;
 		}
-		&__input{
+		&__input {
 
 		}
 	}
+
 	.multiselect__content-wrapper {
 		display: block;
 	}
