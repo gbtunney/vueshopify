@@ -22,7 +22,7 @@
 <script type="text/javascript">
 
 	import Vue from 'vue';
-	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector2.vue'
+	import productOptionSelect from '@/components/shopify/product/ProductOptionSelector.vue'
 	import ProductImages from '@/components/shopify/product/ProductImages.vue'
 	import store from '@/store'
 	import {mapState, mapActions} from "vuex";
