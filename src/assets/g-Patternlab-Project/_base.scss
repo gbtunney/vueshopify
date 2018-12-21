@@ -1,10 +1,18 @@
 @import "../g-Patternlab/dependencies";
 @import "variables";
+
+//todo: fix this
+@import "../g-Patternlab/objects/objects";
 @import "../g-Patternlab/modules/colors/module";
+
+@import "../g-Patternlab/modules/sizing/module";
+
 @import "../g-Patternlab/modules/typography/module";
+
+
 @import "../g-Patternlab/modules/rhythm-spacing/module";
 @import "../g-Patternlab/modules/components/module";
-@import "../g-Patternlab/modules/generator/module";
+//s@import "../g-Patternlab/modules/generator/module";
 
 $generate-map: (
     scheme-classes: true,
@@ -16,16 +24,16 @@ $generate-map: (
 
 );
 
-@include test-all-dependencies();
+//@include test-all-dependencies();
 @include init-color-module;
 
 ///todo: do some kind of check to make sure it is initialized bef
-@include init-generator($generate-map);
+//@include init-generator($generate-map);
 
 
-@debug "light #{color(accent-default,foreground)}";
-@debug "inverted #{color(dark-accent-default,foreground)}";
-@debug "inverted #{color(dark-accent-default,background)}";
+//@debug "light #{color(accent-default,foreground)}";
+//@debug "inverted #{color(dark-accent-default,foreground)}";
+//@debug "inverted #{color(dark-accent-default,background)}";
 
 
 //@debug get-scheme-colors-list(alt-light);
